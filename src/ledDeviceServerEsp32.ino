@@ -1655,6 +1655,7 @@ void setup() {
         Serial.println("UNABLE to connect WiFi!");
         while (true);
     }
+    setupArduinoOTA(deviceId);
     printWiFiInfo();
     startTime.setTime(reportIn());
     Serial.println("Start time:" + startTime.toString());
@@ -1674,7 +1675,7 @@ void setup() {
 /// </summary>
 
 void loop() {
-
+    ArduinoOTA.handle();
     reconnectIfDisconnected();
     stripper.run();
 
