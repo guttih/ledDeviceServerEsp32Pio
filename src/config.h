@@ -1,6 +1,6 @@
 
 const char *getWifiPassword() {
-    return "thePassworld";
+    return "stuff";
 }
 
 const char *getWifiSsId() {
