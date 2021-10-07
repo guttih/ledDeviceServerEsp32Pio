@@ -24,7 +24,11 @@ by regular post to the address Haseyla 27, 260 Reykjanesbar, Iceland.
 //Christmas lights: see: ali: https://www.aliexpress.com/item/32444415410.html?spm=a2g0s.9042311.0.0.27424c4dQ0AYL8  gparts: http://parts.guttih.com/parts/register/5bf9a0402e0e1a69a99a9bc9
 //#define WS2811_RGB_DATA_PIN13
 //#define SOLEY_IN
-#define CHRISTMAS
+
+#define FASTLED_ALLOW_INTERRUPTS 0
+
+
+#define CHRISTMAS_SOUTH /*About 310 leds*/
 
 #include "StripHelper.h"
 #include "config.h"
@@ -36,7 +40,7 @@ by regular post to the address Haseyla 27, 260 Reykjanesbar, Iceland.
     #define DATA_PIN 14  /*white wire  strip: http://parts.guttih.com/parts/register/5bf9a0402e0e1a69a99a9bc9*/
     #define STRIP_TYPE WS2811
     #define COLOR_SCHEME RGB
-#elif defined (CHRISTMAS)
+#elif defined (CHRISTMAS_SOUTH)
     const char* deviceId = "615cabda61210d052212454d"; /*Christmas strip*/
     #define NUM_LEDS 292
     #define DATA_PIN 13  /*white wire  strip: http://parts.guttih.com/parts/register/5bf9a0402e0e1a69a99a9bc9*/
@@ -1675,7 +1679,7 @@ void setup() {
 /// </summary>
 
 void loop() {
-    ArduinoOTA.handle();
+    ArduinoOTA.handle();  //todo: this causes flicker
     reconnectIfDisconnected();
     stripper.run();
 
