@@ -1,0 +1,51 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP HLK-PM01
+D Compact AC/DC board mount power module 3W 5V
+K AC/DC module power supply
+F http://www.hlktech.net/product_detail.php?ProId=54
+$ENDCMP
+#
+$CMP HLK-PM03
+D Compact AC/DC board mount power module 3W 3V3
+K AC/DC module power supply
+F http://www.hlktech.net/product_detail.php?ProId=59
+$ENDCMP
+#
+$CMP HLK-PM12
+D Compact AC/DC board mount power module 3W 12V
+K AC/DC module power supply
+F http://www.hlktech.net/product_detail.php?ProId=56
+$ENDCMP
+#
+$CMP HLK-PM24
+D Compact AC/DC board mount power module 3W 24V
+K AC/DC module power supply
+F http://www.hlktech.net/product_detail.php?ProId=81
+$ENDCMP
+#
+$CMP LLC_4CH
+D 4-Channel Bidirectional Voltage-Level Translator, Auto Direction Sensing and ±15-kV ESD Protection, 3.3V LPort, 5.5V HPort, SOIC-12
+K Level-Shifter CMOS-TTL-Translation
+F http://www.ti.com/lit/ds/symlink/txb0104.pdf
+$ENDCMP
+#
+$CMP MountingHole
+D Mounting Hole without connection
+K mounting hole
+F ~
+$ENDCMP
+#
+$CMP Screw_Terminal_01x02
+D Generic screw terminal, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)
+K screw terminal
+F ~
+$ENDCMP
+#
+$CMP Screw_Terminal_01x03
+D Generic screw terminal, single row, 01x03, script generated (kicad-library-utils/schlib/autogen/connector/)
+K screw terminal
+F ~
+$ENDCMP
+#
+#End Doc Library

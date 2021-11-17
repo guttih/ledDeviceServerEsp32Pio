@@ -1,0 +1,3 @@
+(fp_lib_table
+  (lib (name ledDeviceServerEsp32Pio)(type KiCad)(uri ${KIPRJMOD}/ledDeviceServerEsp32Pio.pretty)(options "")(descr ""))
+)
