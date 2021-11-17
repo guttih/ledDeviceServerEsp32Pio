@@ -25,7 +25,8 @@ by regular post to the address Haseyla 27, 260 Reykjanesbar, Iceland.
 //#define WS2811_RGB_DATA_PIN13
 //#define SOLEY_IN
 
-#define FASTLED_ALLOW_INTERRUPTS 0
+//#define FASTLED_ALLOW_INTERRUPTS 0
+//#define FASTLED_ESP32_FLASH_LOCK 1
 
 
 #define CHRISTMAS_SOUTH /*About 310 leds*/
@@ -43,7 +44,7 @@ by regular post to the address Haseyla 27, 260 Reykjanesbar, Iceland.
 #elif defined (CHRISTMAS_SOUTH)
     const char* deviceId = "615cabda61210d052212454d"; /*Christmas strip*/
     #define NUM_LEDS 292
-    #define DATA_PIN 13  /*white wire  strip: http://parts.guttih.com/parts/register/5bf9a0402e0e1a69a99a9bc9*/
+    #define DATA_PIN 13  /*white wire  strip: http://parts.guttih.com/parts/view/5fa91941bff3fe05309547ee */
     #define STRIP_TYPE WS2811
     #define COLOR_SCHEME RGB
 #elif defined (SOLEY_IN)
