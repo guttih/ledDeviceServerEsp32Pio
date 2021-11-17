@@ -44,7 +44,7 @@ by regular post to the address Haseyla 27, 260 Reykjanesbar, Iceland.
 #elif defined (CHRISTMAS_SOUTH)
     const char* deviceId = "615cabda61210d052212454d"; /*Christmas strip*/
     #define NUM_LEDS 292
-    #define DATA_PIN 17  /*white wire  strip: http://parts.guttih.com/parts/view/5fa91941bff3fe05309547ee */
+    #define DATA_PIN 16  /*white wire  strip: http://parts.guttih.com/parts/view/5fa91941bff3fe05309547ee */
     #define STRIP_TYPE WS2811
     #define COLOR_SCHEME RGB
 #elif defined (SOLEY_IN)
