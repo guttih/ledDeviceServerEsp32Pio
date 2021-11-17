@@ -43,7 +43,7 @@ by regular post to the address Haseyla 27, 260 Reykjanesbar, Iceland.
     #define COLOR_SCHEME RGB
 #elif defined (CHRISTMAS_SOUTH)
     const char* deviceId = "615cabda61210d052212454d"; /*Christmas strip*/
-    #define NUM_LEDS 292
+    #define NUM_LEDS 50 /*292*/
     #define DATA_PIN 16  /*white wire  strip: http://parts.guttih.com/parts/view/5fa91941bff3fe05309547ee */
     #define STRIP_TYPE WS2811
     #define COLOR_SCHEME RGB
@@ -1331,8 +1331,8 @@ void stripInit(){
 
 void ExtractFromJsonAndSetStripValues(JsonData *rootObject){
     unsigned long stepDelay;
-    const int VARIABLE_COUNT = 3;
-    unsigned long values[VARIABLE_COUNT] = {0,0,0};
+    const int VARIABLE_COUNT = 4;
+    unsigned long values[VARIABLE_COUNT] = {0,0,0,0};
     int i;
     STRIP_PROGRAMS program;
     if (rootObject->getType() != JSONTYPE_OBJECT) {
@@ -1390,7 +1390,7 @@ void ExtractFromJsonAndSetStripValues(JsonData *rootObject){
         i++;
     }
 
-    stripper.setNewValues((STRIP_PROGRAMS)ulCom, ulDelay, values[0],values[1],values[2]);
+    stripper.setNewValues((STRIP_PROGRAMS)ulCom, ulDelay, values[0],values[1],values[2],values[3]);
     
     stripper.initProgram(stripper.getProgram());
 

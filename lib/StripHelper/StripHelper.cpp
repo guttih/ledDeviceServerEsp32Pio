@@ -36,18 +36,25 @@ void StripHelper::reset() {
     direction = 1;
     stepDelay = 0;
     byteWorker1 = 0;
-    value1 = 0;
+    value1 = 5;
     value2 = 0;
     value3 = 0;
+    value4 = 0;
     stripMustBeOff = false;
-    brightness = 1;
-    program = STRIP_PROGRAMS::SINGLE_COLOR;
-    stripColors[0] = CRGB::Magenta;
-    stripColors[1] = CRGB::Red;
-    stripColors[2] = CRGB::Green;
-    stripColors[3] = CRGB::Blue;
-    stripColors[4] = CRGB::White;
-    stripColors[5] = CRGB::Brown;
+    brightness = 255;
+    program = STRIP_PROGRAMS::MULTI_COLOR;
+    // stripColors[0] = CRGB::Magenta;
+    // stripColors[1] = CRGB::Red;
+    // stripColors[2] = CRGB::Green;
+    // stripColors[3] = CRGB::Blue;
+    // stripColors[4] = CRGB::White;
+    // stripColors[5] = CRGB::Brown;
+    stripColors[0] = CRGB(255,42,0);
+    stripColors[1] = CRGB(0,0,255);
+    stripColors[2] = CRGB(255,200,0);
+    stripColors[3] = CRGB(255,0,0);
+    stripColors[4] = CRGB(0,255,0);
+    stripColors[5] = CRGB(255,255,255);
 
     if (tempArray != NULL) {
         delete [] tempArray;
@@ -55,17 +62,19 @@ void StripHelper::reset() {
     }
 }
 
-void StripHelper::setNewValues(STRIP_PROGRAMS program, unsigned long stepDelay, unsigned long value1, unsigned long value2, unsigned long value3){
+void StripHelper::setNewValues(STRIP_PROGRAMS program, unsigned long stepDelay, unsigned long value1, unsigned long value2, unsigned long value3, unsigned long value4){
     this->program   = program;
     this->stepDelay = stepDelay;
     this->value1    = value1;
     this->value2    = value2;
     this->value3    = value3;
+    this->value4    = value4;
     Serial.print("Program:");Serial.print(program);
     Serial.print(" | stepDelay:");Serial.print(stepDelay);
     Serial.print(" | value1:");Serial.print(value1);
     Serial.print(" | value2:");Serial.println(value2);
     Serial.print(" | value3:");Serial.println(value3);
+    Serial.print(" | value4:");Serial.println(value4);
 }
 
 //will reverse current direction set turns to 0
@@ -184,7 +193,7 @@ String StripHelper::getProgramName(STRIP_PROGRAMS stripProgram) {
         case RESET          : return "Reset";
         case SINGLE_COLOR   : return "Single color";
         case MULTI_COLOR    : return "Multicolor";
-        case UP             : return "Up";
+        case FIRE           : return "Fire";
         case DOWN           : return "Down";
         case UP_DOWN        : return "Up and down";
         case RAINBOW        : return "Rainbow";
@@ -206,7 +215,7 @@ String StripHelper::getProgramDescription(STRIP_PROGRAMS stripProgram) {
         case RESET          : return "resets all strip values.  Like turning the strip off, and then on again without ever loosing Wifi connection.";
         case SINGLE_COLOR   : return "First color will be set to all of the strip pixels";
         case MULTI_COLOR    : return "Display each of your selected colors in series through out the strip.";
-        case UP             : return "Color 0 is the color of a a pixel running up the strip. Color 1 is the background.";
+        case FIRE           : return "basic one-dimensional Fire simulation.";
         case DOWN           : return "Color 0 is the color of a a pixel running down the strip. Color 1 is the background.";
         case UP_DOWN        : return "Color 0 is the color of a a pixel running up and down the strip. Color 1 is the background.";
         case STARS          : return "Color 0 is the color of a start pixel.  Color 1 is the background color.";
@@ -234,7 +243,8 @@ String StripHelper::getProgramInfoAsJsonArray(STRIP_PROGRAMS stripProgram) {
         case MULTI_COLOR    :   colors = COLOR_COUNT;    
                                 values+="\"Number of colors\"";                                           
                                 break;
-        case UP             : 
+        case FIRE           :   values+="\"Cooling: How much does the air cool as it rises?  Less cooling = taller flames.  More cooling = shorter flames. (Default 55, suggested range 20-100)\",\"Sparking: What chance (out of 255) is there that a new spark will be lit? Higher chance = more roaring fire.  Lower chance = more flickery fire.  (Default 120, suggested range 50-200).\",\"Simple 0 = true\",\"Reverse direction 0 = false\"";
+                                break; 
         case DOWN           : 
         case UP_DOWN        :   break;
         case STARS          :   colors = 2; values+="\"Number of stars\",\"Delay between new stars\"";
@@ -344,10 +354,11 @@ String StripHelper::toJson() {
     int len = STRIP_PROGRAMS_COUNT;
     String ret ="{";
     
-    ret+=      MakeJsonKeyVal("programs", getAllProgramInfosAsJsonArray());
-    ret+="," + MakeJsonKeyVal("delay",  String(stepDelay));
-    ret+="," + MakeJsonKeyVal("com",    String(program));
-    ret+="," + MakeJsonKeyVal("values",    "[" + String(value1) + "," + String(value2) + "," + String(value3) + "]");
+    ret+=      MakeJsonKeyVal("programs"  , getAllProgramInfosAsJsonArray());
+    ret+="," + MakeJsonKeyVal("delay"     ,  String(stepDelay));
+    ret+="," + MakeJsonKeyVal("com"       ,  String(program));
+    ret+="," + MakeJsonKeyVal("brightness", String(brightness));
+    ret+="," + MakeJsonKeyVal("values"    , "[" + String(value1) + "," + String(value2) + "," + String(value3)+ "," + String(value4) + "]");
     ret+=",\"colors\":[";
         for(int i = 0; i < COLOR_COUNT; i++){
             if (i>0)
@@ -541,6 +552,88 @@ void StripHelper::programStars() {
     }
 }
 
+void StripHelper::programFireInit() {
+    mPal = HeatColors_p;
+
+    // Cooling = value 1 -> Default 55, suggested range 20-100 
+    if (value1 < 1 || value1 > 255)
+        value1 = 55;
+    
+    // Default 120, suggested range 50-200.
+    if (value2 < 1 || value2 > 255)
+        value2 = 120;
+
+    ulWorker1 = 0;
+    iWorker1 = 1;
+    unsigned int ledCount = getCount();
+
+    if (tempArray != NULL) {
+        delete [] tempArray;
+        tempArray = NULL;
+    }
+
+    if (ledCount < 1)
+        return;
+    
+    tempArray = new unsigned int [ledCount]();
+}
+
+/**
+ * @brief programFireInit() must be called before this function can be called.
+ * 
+ */
+void StripHelper::programFire()
+{
+    random16_add_entropy(random(255));
+    const int FRAMES_PER_SECOND = 60;
+    uint8_t COOLING = value1,
+            SPARKING = value2;
+    bool simple = value3;
+    bool reverseDirection = value4;
+    // Step 1.  Cool down every cell a little
+    for (int i = 0; i < getCount(); i++)
+    {
+        tempArray[i] = qsub8(tempArray[i], random8(0, ((COOLING * 10) / getCount()) + 2));
+    }
+
+    // Step 2.  Heat from each cell drifts 'up' and diffuses a little
+    for (int k = getCount() - 1; k >= 2; k--)
+    {
+        tempArray[k] = (tempArray[k - 1] + tempArray[k - 2] + tempArray[k - 2]) / 3;
+    }
+
+    // Step 3.  Randomly ignite new 'sparks' of heat(tempArray) near the bottom
+    if (random8() < SPARKING)
+    {
+        int y = random8(7);
+        tempArray[y] = qadd8(tempArray[y], random8(160, 255));
+    }
+
+    // Step 4.  Map from heat (tempArray) cells to LED colors
+    CRGB color;
+    int pixelnumber;
+    for (int j = 0; j < getCount(); j++)
+    {
+        if (simple)
+            color = HeatColor(tempArray[j]);
+        else
+        {
+            byte colorindex = scale8(tempArray[j], 240);
+            color = ColorFromPalette(mPal, colorindex);
+        }
+        
+
+        if (reverseDirection)
+            pixelnumber = (getCount() - 1) - j;
+        else
+            pixelnumber = j;
+        leds[pixelnumber] = color;
+    }
+
+    FastLED.show(); // display this frame
+    FastLED.delay(stepDelay / FRAMES_PER_SECOND);
+}
+
 void StripHelper::run() {
     if (stripMustBeOff) {
         programOff();
@@ -562,7 +655,7 @@ void StripHelper::run() {
         case OFF         : programOff(); break;
         case SINGLE_COLOR: programSingleColor(); break;
         case MULTI_COLOR : programMultiColor(); break;
-        case UP          : 
+        case FIRE        : programFire(); break;
         case DOWN        : programStepOne(getColorBank(0),getColorBank(1) ); stepUp(); break;
         case UP_DOWN     : programUpDown(); break;
         case RAINBOW     : programRainbow(); break;
@@ -584,7 +677,7 @@ void StripHelper::initProgram(STRIP_PROGRAMS programToSet) {
         case SINGLE_COLOR: break;
         case MULTI_COLOR : setDirection(true); break;
         case RESET       : reset(); initProgram(getProgram());     break;
-        case UP          : setDirection(true);  break;
+        case FIRE        : programFireInit();  break;
         case DOWN        : setDirection(false); break;
         case UP_DOWN     : setDirection(false); toggleDirection(); break;
         case RAINBOW     : setDirection(true); break;

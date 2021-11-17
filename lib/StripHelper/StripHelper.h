@@ -16,7 +16,7 @@ enum STRIP_PROGRAMS {
     RESET,
     SINGLE_COLOR,
     MULTI_COLOR,
-    UP,
+    FIRE,
     DOWN,
     UP_DOWN,
     STARS,
@@ -53,6 +53,7 @@ Example: ----
 */
 class StripHelper {
     private:
+        CRGBPalette16 mPal;
         int ledCount;
         void init();
         bool fixStep();
@@ -73,6 +74,7 @@ class StripHelper {
         unsigned long value1;
         unsigned long value2;
         unsigned long value3;
+        unsigned long value4;
     
         void fillByIndex(int startIndex, int endIndex, const struct CRGB& color);
         void reset();
@@ -107,6 +109,8 @@ class StripHelper {
         void programStarsInit();
         void programStarsSelectNewStars();
         void programRainbow();
+        void programFireInit();
+        void programFire();
     public:
         
         bool stripMustBeOff;
@@ -131,7 +135,7 @@ class StripHelper {
         uint32_t encodeColor(CRGB color);
         CRGB getColorBank(uint8_t index);
         bool setColorBank(uint8_t index, CRGB newColor);
-        void setNewValues(STRIP_PROGRAMS program, unsigned long stepDelay, unsigned long value1, unsigned long value2, unsigned long value3);
+        void setNewValues(STRIP_PROGRAMS program, unsigned long stepDelay, unsigned long value1, unsigned long value2, unsigned long value3, unsigned long value4);
         void programOff();
 };
 
