@@ -279,4 +279,70 @@ Wire Wire Line
 	9750 2750 9750 2950
 Wire Wire Line
 	9750 2400 9750 2650
+$Comp
+L ledDeviceServerEsp32Pio:MountingHole H1
+U 1 1 61970074
+P 6300 5900
+F 0 "H1" H 6400 5946 50  0000 L CNN
+F 1 "MountingHole" H 6400 5855 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3.2mm_M3" H 6200 5800 50  0001 C CNN
+F 3 "~" H 6300 5900 50  0001 C CNN
+	1    6300 5900
+	1    0    0    -1  
+$EndComp
+$Comp
+L ledDeviceServerEsp32Pio:MountingHole H2
+U 1 1 61970FEE
+P 6300 6100
+F 0 "H2" H 6400 6146 50  0000 L CNN
+F 1 "MountingHole" H 6400 6055 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3.2mm_M3" H 6200 6000 50  0001 C CNN
+F 3 "~" H 6300 6100 50  0001 C CNN
+	1    6300 6100
+	1    0    0    -1  
+$EndComp
+$Comp
+L ledDeviceServerEsp32Pio:MountingHole H3
+U 1 1 619719BE
+P 6300 6300
+F 0 "H3" H 6400 6346 50  0000 L CNN
+F 1 "MountingHole" H 6400 6255 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3.2mm_M3" H 6200 6200 50  0001 C CNN
+F 3 "~" H 6300 6300 50  0001 C CNN
+	1    6300 6300
+	1    0    0    -1  
+$EndComp
+$Comp
+L ledDeviceServerEsp32Pio:MountingHole H4
+U 1 1 6197235C
+P 6300 6500
+F 0 "H4" H 6400 6546 50  0000 L CNN
+F 1 "MountingHole" H 6400 6455 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3.2mm_M3" H 6200 6400 50  0001 C CNN
+F 3 "~" H 6300 6500 50  0001 C CNN
+	1    6300 6500
+	1    0    0    -1  
+$EndComp
+$Comp
+L ledDeviceServerEsp32Pio:MountingHole H5
+U 1 1 61972B97
+P 6300 6700
+F 0 "H5" H 6400 6746 50  0000 L CNN
+F 1 "MountingHole" H 6400 6655 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3.2mm_M3" H 6200 6600 50  0001 C CNN
+F 3 "~" H 6300 6700 50  0001 C CNN
+	1    6300 6700
+	1    0    0    -1  
+$EndComp
+$Comp
+L ledDeviceServerEsp32Pio:MountingHole H6
+U 1 1 619730E2
+P 6300 6900
+F 0 "H6" H 6400 6946 50  0000 L CNN
+F 1 "MountingHole" H 6400 6855 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3.2mm_M3" H 6200 6800 50  0001 C CNN
+F 3 "~" H 6300 6900 50  0001 C CNN
+	1    6300 6900
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
