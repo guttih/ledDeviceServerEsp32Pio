@@ -54,8 +54,6 @@ NoConn ~ 5450 3750
 NoConn ~ 5450 3850
 NoConn ~ 5450 3950
 NoConn ~ 5450 4250
-NoConn ~ 5450 4350
-NoConn ~ 5450 4450
 NoConn ~ 5450 4650
 NoConn ~ 5450 4750
 NoConn ~ 5450 4850
@@ -195,51 +193,23 @@ Wire Wire Line
 Connection ~ 8450 3350
 Connection ~ 4400 2550
 Wire Wire Line
-	3950 2550 4400 2550
-Wire Wire Line
 	5250 3000 5250 4550
 Wire Wire Line
 	4400 4450 4400 5700
 Wire Wire Line
 	4400 2550 4400 3050
 Wire Wire Line
-	3950 2550 3950 3550
-Wire Wire Line
 	4600 4450 4600 5550
-NoConn ~ 4050 3650
-NoConn ~ 4050 3450
-NoConn ~ 4950 3650
-NoConn ~ 4950 3450
 Wire Wire Line
 	4600 3000 5250 3000
 Wire Wire Line
 	4600 3050 4600 3000
-Wire Wire Line
-	3650 3550 3950 3550
-Wire Wire Line
-	3650 3750 3850 3750
-Wire Wire Line
-	3850 3750 3850 4050
-Wire Wire Line
-	3650 3650 3950 3650
-Wire Wire Line
-	3950 3650 3950 3850
-Text Label 3650 3550 0    50   ~ 0
+Text Label 3650 3850 0    50   ~ 0
 GND
-Text Label 3650 3650 0    50   ~ 0
-CLOCK
-Text Label 3650 3750 0    50   ~ 0
-DATA
-Wire Wire Line
-	4050 3850 3950 3850
-Wire Wire Line
-	4050 4050 3850 4050
-Wire Wire Line
-	5050 4150 5450 4150
-Wire Wire Line
-	5050 3850 5050 4150
-Wire Wire Line
-	4950 3850 5050 3850
+Text Label 3650 3950 0    50   ~ 0
+CLOCK1
+Text Label 3650 4050 0    50   ~ 0
+DATA1
 Wire Wire Line
 	5450 4050 4950 4050
 $Comp
@@ -256,12 +226,12 @@ $EndComp
 $Comp
 L ledDeviceServerEsp32Pio:Screw_Terminal_01x03 JStrip1
 U 1 1 6195D7EF
-P 3450 3650
-F 0 "JStrip1" H 3350 3400 50  0000 L CNN
-F 1 "Terminal_LCDstrip" H 3100 3900 50  0000 L CNN
-F 2 "TerminalBlock:TerminalBlock_bornier-3_P5.08mm" H 3400 3350 50  0001 C CNN
-F 3 "~" H 3450 3650 50  0001 C CNN
-	1    3450 3650
+P 3400 3950
+F 0 "JStrip1" H 3500 3950 50  0000 L CNN
+F 1 "Terminal_LCDstrip" H 3050 4200 50  0000 L CNN
+F 2 "TerminalBlock:TerminalBlock_bornier-3_P5.08mm" H 3350 3650 50  0001 C CNN
+F 3 "~" H 3400 3950 50  0001 C CNN
+	1    3400 3950
 	-1   0    0    1   
 $EndComp
 Wire Wire Line
@@ -312,37 +282,72 @@ F 3 "~" H 6300 6300 50  0001 C CNN
 	1    6300 6300
 	1    0    0    -1  
 $EndComp
+Wire Wire Line
+	3850 3850 3600 3850
+Text Label 3650 3350 0    50   ~ 0
+GND
+Text Label 3650 3450 0    50   ~ 0
+CLOCK2
+Text Label 3650 3550 0    50   ~ 0
+DATA2
 $Comp
-L ledDeviceServerEsp32Pio:MountingHole H4
-U 1 1 6197235C
-P 6300 6500
-F 0 "H4" H 6400 6546 50  0000 L CNN
-F 1 "MountingHole" H 6400 6455 50  0000 L CNN
-F 2 "MountingHole:MountingHole_3.2mm_M3" H 6200 6400 50  0001 C CNN
-F 3 "~" H 6300 6500 50  0001 C CNN
-	1    6300 6500
-	1    0    0    -1  
+L ledDeviceServerEsp32Pio:Screw_Terminal_01x03 JStrip2
+U 1 1 619BC866
+P 3400 3450
+F 0 "JStrip2" H 3500 3450 50  0000 L CNN
+F 1 "Terminal_LCDstrip" H 3000 3100 50  0000 L CNN
+F 2 "TerminalBlock:TerminalBlock_bornier-3_P5.08mm" H 3350 3150 50  0001 C CNN
+F 3 "~" H 3400 3450 50  0001 C CNN
+	1    3400 3450
+	-1   0    0    1   
 $EndComp
-$Comp
-L ledDeviceServerEsp32Pio:MountingHole H5
-U 1 1 61972B97
-P 6300 6700
-F 0 "H5" H 6400 6746 50  0000 L CNN
-F 1 "MountingHole" H 6400 6655 50  0000 L CNN
-F 2 "MountingHole:MountingHole_3.2mm_M3" H 6200 6600 50  0001 C CNN
-F 3 "~" H 6300 6700 50  0001 C CNN
-	1    6300 6700
-	1    0    0    -1  
-$EndComp
-$Comp
-L ledDeviceServerEsp32Pio:MountingHole H6
-U 1 1 619730E2
-P 6300 6900
-F 0 "H6" H 6400 6946 50  0000 L CNN
-F 1 "MountingHole" H 6400 6855 50  0000 L CNN
-F 2 "MountingHole:MountingHole_3.2mm_M3" H 6200 6800 50  0001 C CNN
-F 3 "~" H 6300 6900 50  0001 C CNN
-	1    6300 6900
-	1    0    0    -1  
-$EndComp
+Wire Wire Line
+	3850 3350 3600 3350
+Wire Wire Line
+	3850 3350 3850 2550
+Wire Wire Line
+	3050 2550 3850 2550
+Wire Wire Line
+	3850 3700 3850 3850
+Wire Wire Line
+	5350 4150 5350 3850
+Wire Wire Line
+	5350 4150 5450 4150
+Wire Wire Line
+	4950 3850 5350 3850
+Wire Wire Line
+	5450 4350 5150 4350
+Wire Wire Line
+	5150 4350 5150 3650
+Wire Wire Line
+	5150 3650 4950 3650
+Wire Wire Line
+	5450 4450 5050 4450
+Wire Wire Line
+	5050 4450 5050 3450
+Wire Wire Line
+	5050 3450 4950 3450
+Connection ~ 3850 2550
+Wire Wire Line
+	3850 2550 4400 2550
+Wire Wire Line
+	3000 2550 3000 3700
+Wire Wire Line
+	3000 3700 3850 3700
+Wire Wire Line
+	3600 3450 4050 3450
+Wire Wire Line
+	3600 3550 3950 3550
+Wire Wire Line
+	3950 3550 3950 3650
+Wire Wire Line
+	3950 3650 4050 3650
+Wire Wire Line
+	3600 3950 3950 3950
+Wire Wire Line
+	3950 3950 3950 3850
+Wire Wire Line
+	3950 3850 4050 3850
+Wire Wire Line
+	4050 4050 3600 4050
 $EndSCHEMATC
