@@ -1403,8 +1403,6 @@ void ExtractFromJsonAndSetStripValues(JsonData *rootObject){
 }
 
 void handleCustom(WiFiClient* client, unsigned int postMethod, String callingUrl) {
-    //stripper.stripMustBeOff = true;
-    //stripProgramOff();
     METHODS method = (METHODS)(unsigned int)postMethod;
     Serial.println("Calling url " + callingUrl);
     if (method == METHODS::METHOD_POST || method == METHODS::METHOD_DELETE)
@@ -1434,7 +1432,6 @@ void handleCustom(WiFiClient* client, unsigned int postMethod, String callingUrl
     client->println(makeJsonResponseString(200, strSend));
     Serial.println("Sending custom response-----");
     Serial.println(strSend);
-    //stripper.stripMustBeOff = false;
 }
 
 void handleStatus(WiFiClient* client) {
@@ -1620,13 +1617,10 @@ static void reconnectIfDisconnected(void) {
     if (WiFi.isConnected()){
         if (connectionWasDisconnected){
             connectionWasDisconnected = false;
-            stripper.stripMustBeOff   = false; 
         }
         return;
     }
     connectionWasDisconnected = true;
-    stripper.stripMustBeOff = true;
-    stripper.programOff();
     static uint32_t timerTwoSecondsMs = millis();
 
     if ((millis() - timerTwoSecondsMs) > 2000) {
@@ -1637,7 +1631,6 @@ static void reconnectIfDisconnected(void) {
         //after the last command executes then two second will pass
         timerTwoSecondsMs = millis();
     }
-    stripper.stripMustBeOff = !WiFi.isConnected();
 }
 
 void setup() {
@@ -1654,6 +1647,9 @@ void setup() {
     Serial.println("Whitelist: " + whiteList.toJson());
     
     Serial.println();
+    setupPins();
+    stripInit();
+    stripper.run();
     sta_was_connected = connectWifi();
     if (sta_was_connected)
         Serial.println("WiFi connected");
@@ -1666,7 +1662,6 @@ void setup() {
     printWiFiInfo();
     startTime.setTime(reportIn());
     Serial.println("Start time:" + startTime.toString());
-    setupPins();
     //test(&devicePins);
     Serial.println("The device can be accessed at this path ");
     String subPath = "://" + WiFi.localIP().toString() + ":" + String(PORT) + "\"";
@@ -1674,7 +1669,6 @@ void setup() {
     Serial.println("\"http" + subPath + ".");
     server.begin();
     tellServerToSendMonitors();
-    stripInit();
 }
 
 /// <summary>
