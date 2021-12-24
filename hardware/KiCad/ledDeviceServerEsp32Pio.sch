@@ -28,8 +28,8 @@ $Comp
 L Espressif:ESP32-DevKitC U1
 U 1 1 6195EB5A
 P 6900 4300
-F 0 "U1" H 6900 3150 50  0000 C CNN
-F 1 "ESP32-DevKitC" H 6950 5350 50  0000 C CNN
+F 0 "U1" H 6975 3035 50  0000 C CNN
+F 1 "ESP32-DevKitC" H 6975 3126 50  0000 C CNN
 F 2 "Espressif:ESP32-DevKitC" H 6900 3050 50  0001 C CNN
 F 3 "https://docs.espressif.com/projects/esp-idf/zh_CN/latest/esp32/hw-reference/esp32/get-started-devkitc.html" H 7050 3050 50  0001 C CNN
 	1    6900 4300
@@ -54,28 +54,6 @@ NoConn ~ 5450 3750
 NoConn ~ 5450 3850
 NoConn ~ 5450 3950
 NoConn ~ 5450 4250
-NoConn ~ 5450 4650
-NoConn ~ 5450 4750
-NoConn ~ 5450 4850
-NoConn ~ 5450 4950
-NoConn ~ 5450 5050
-NoConn ~ 5450 5150
-NoConn ~ 8200 3450
-NoConn ~ 8200 3550
-NoConn ~ 8200 3650
-NoConn ~ 8200 3750
-NoConn ~ 8200 3950
-NoConn ~ 8200 4050
-NoConn ~ 8200 4150
-NoConn ~ 8200 4250
-NoConn ~ 8200 4350
-NoConn ~ 8200 4450
-NoConn ~ 8200 4550
-NoConn ~ 8200 4650
-NoConn ~ 8200 4750
-NoConn ~ 8200 4850
-NoConn ~ 8200 4950
-NoConn ~ 8200 5050
 $Comp
 L ledDeviceServerEsp32Pio:HLK-PM01 PS1
 U 1 1 61952CC8
@@ -186,16 +164,10 @@ Wire Wire Line
 	8450 2750 8450 3350
 Wire Wire Line
 	8450 3350 9100 3350
-Wire Wire Line
-	9100 3350 9100 5700
-Wire Wire Line
-	9100 5700 4400 5700
 Connection ~ 8450 3350
 Connection ~ 4400 2550
 Wire Wire Line
 	5250 3000 5250 4550
-Wire Wire Line
-	4400 4450 4400 5700
 Wire Wire Line
 	4400 2550 4400 3050
 Wire Wire Line
@@ -210,8 +182,6 @@ Text Label 3650 3950 0    50   ~ 0
 CLOCK1
 Text Label 3650 4050 0    50   ~ 0
 DATA1
-Wire Wire Line
-	5450 4050 4950 4050
 $Comp
 L ledDeviceServerEsp32Pio:LLC_4CH U2
 U 1 1 61977BBE
@@ -350,4 +320,67 @@ Wire Wire Line
 	3950 3850 4050 3850
 Wire Wire Line
 	4050 4050 3600 4050
+$Comp
+L ledDeviceServerEsp32Pio:MountingHole H4
+U 1 1 61C4DD5F
+P 6300 6500
+F 0 "H4" H 6400 6546 50  0000 L CNN
+F 1 "MountingHole" H 6400 6455 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3.2mm_M3" H 6200 6400 50  0001 C CNN
+F 3 "~" H 6300 6500 50  0001 C CNN
+	1    6300 6500
+	1    0    0    -1  
+$EndComp
+$Comp
+L ledDeviceServerEsp32Pio:MountingHole H5
+U 1 1 61C4E6D4
+P 6300 6700
+F 0 "H5" H 6400 6746 50  0000 L CNN
+F 1 "MountingHole" H 6400 6655 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3.2mm_M3" H 6200 6600 50  0001 C CNN
+F 3 "~" H 6300 6700 50  0001 C CNN
+	1    6300 6700
+	1    0    0    -1  
+$EndComp
+$Comp
+L ledDeviceServerEsp32Pio:MountingHole H6
+U 1 1 61C4ED3D
+P 6300 6900
+F 0 "H6" H 6400 6946 50  0000 L CNN
+F 1 "MountingHole" H 6400 6855 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3.2mm_M3" H 6200 6800 50  0001 C CNN
+F 3 "~" H 6300 6900 50  0001 C CNN
+	1    6300 6900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4400 4450 4400 5700
+Wire Wire Line
+	9100 3350 9100 5700
+NoConn ~ 8200 5050
+NoConn ~ 8200 4950
+NoConn ~ 8200 4850
+NoConn ~ 8200 4750
+NoConn ~ 8200 4650
+NoConn ~ 8200 4550
+NoConn ~ 8200 4450
+NoConn ~ 8200 4350
+NoConn ~ 8200 4250
+NoConn ~ 8200 4150
+NoConn ~ 8200 4050
+NoConn ~ 8200 3950
+NoConn ~ 8200 3750
+NoConn ~ 8200 3650
+NoConn ~ 8200 3550
+NoConn ~ 8200 3450
+NoConn ~ 5450 5150
+NoConn ~ 5450 5050
+NoConn ~ 5450 4950
+NoConn ~ 5450 4850
+NoConn ~ 5450 4750
+NoConn ~ 5450 4650
+Wire Wire Line
+	4400 5700 9100 5700
+Wire Wire Line
+	4950 4050 5450 4050
 $EndSCHEMATC
