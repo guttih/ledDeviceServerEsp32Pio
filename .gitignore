@@ -18,7 +18,8 @@ hardware/**/fp-info-cache
 hardware/**/*.tmp
 hardware/**/*-save.pro
 hardware/**/*-save.kicad_pcb
-
+hardware/**/*-cache.lib
+hardware/**/*.kicad_pcb-bak
 # Netlist files (exported from Eeschema)
 #   hardware/**/*.net
 

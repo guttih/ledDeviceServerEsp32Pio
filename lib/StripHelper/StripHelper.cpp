@@ -40,7 +40,6 @@ void StripHelper::reset() {
     value2 = 0;
     value3 = 0;
     value4 = 0;
-    stripMustBeOff = false;
     brightness = 255;
     program = STRIP_PROGRAMS::MULTI_COLOR;
     // stripColors[0] = CRGB::Magenta;
@@ -243,7 +242,7 @@ String StripHelper::getProgramInfoAsJsonArray(STRIP_PROGRAMS stripProgram) {
         case MULTI_COLOR    :   colors = COLOR_COUNT;    
                                 values+="\"Number of colors\"";                                           
                                 break;
-        case FIRE           :   values+="\"Cooling: How much does the air cool as it rises?  Less cooling = taller flames.  More cooling = shorter flames. (Default 55, suggested range 20-100)\",\"Sparking: What chance (out of 255) is there that a new spark will be lit? Higher chance = more roaring fire.  Lower chance = more flickery fire.  (Default 120, suggested range 50-200).\",\"Simple 0 = true\",\"Reverse direction 0 = false\"";
+        case FIRE           :   values+="\"Cooling: How much does the air cool as it rises?  Less cooling = taller flames.  More cooling = shorter flames. (Default 1, suggested range 20-100)\",\"Sparking: What chance (out of 255) is there that a new spark will be lit? Higher chance = more roaring fire.  Lower chance = more flickery fire.  (Default 20, suggested range 50-200).\",\"Simple 0 = true\",\"Reverse direction 0 = false\"";
                                 break; 
         case DOWN           : 
         case UP_DOWN        :   break;
@@ -555,13 +554,13 @@ void StripHelper::programStars() {
 void StripHelper::programFireInit() {
     mPal = HeatColors_p;
 
-    // Cooling = value 1 -> Default 55, suggested range 20-100 
+    // Cooling = value 1 -> Default 1, suggested range 20-100 
     if (value1 < 1 || value1 > 255)
-        value1 = 55;
+        value1 = 1;
     
     // Default 120, suggested range 50-200.
     if (value2 < 1 || value2 > 255)
-        value2 = 120;
+        value2 = 20;
 
     ulWorker1 = 0;
     iWorker1 = 1;
@@ -635,10 +634,6 @@ void StripHelper::programFire()
 }
 
 void StripHelper::run() {
-    if (stripMustBeOff) {
-        programOff();
-        return;
-    }
     unsigned long time = millis();
 
     if (lightLastTime +getStepDelay() > time)

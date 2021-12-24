@@ -113,8 +113,6 @@ class StripHelper {
         void programFire();
     public:
         
-        bool stripMustBeOff;
-        
         StripHelper();
         void initialize(CFastLED *controller);
         CFastLED* getController();

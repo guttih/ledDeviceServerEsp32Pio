@@ -43,7 +43,7 @@ by regular post to the address Haseyla 27, 260 Reykjanesbar, Iceland.
     #define COLOR_SCHEME RGB
 #elif defined (CHRISTMAS_SOUTH)
     const char* deviceId = "615cabda61210d052212454d"; /*Christmas strip*/
-    #define NUM_LEDS 50 /*292*/
+    #define NUM_LEDS 382
     #define DATA_PIN 16  /*white wire  strip: http://parts.guttih.com/parts/view/5fa91941bff3fe05309547ee */
     #define STRIP_TYPE WS2811
     #define COLOR_SCHEME RGB
@@ -84,6 +84,8 @@ StripHelper stripper;
 // Name of the wifi (accesspoint)network
 // example: "guttisWiFi"
 #ifdef SOLEY_IN
+    const char* ssid = "TOTO";
+#elif defined(CHRISTMAS_SOUTH)
     const char* ssid = "TOTO";
 #else
     const char* ssid = "swingway";
@@ -1401,8 +1403,6 @@ void ExtractFromJsonAndSetStripValues(JsonData *rootObject){
 }
 
 void handleCustom(WiFiClient* client, unsigned int postMethod, String callingUrl) {
-    //stripper.stripMustBeOff = true;
-    //stripProgramOff();
     METHODS method = (METHODS)(unsigned int)postMethod;
     Serial.println("Calling url " + callingUrl);
     if (method == METHODS::METHOD_POST || method == METHODS::METHOD_DELETE)
@@ -1432,7 +1432,6 @@ void handleCustom(WiFiClient* client, unsigned int postMethod, String callingUrl
     client->println(makeJsonResponseString(200, strSend));
     Serial.println("Sending custom response-----");
     Serial.println(strSend);
-    //stripper.stripMustBeOff = false;
 }
 
 void handleStatus(WiFiClient* client) {
@@ -1618,13 +1617,10 @@ static void reconnectIfDisconnected(void) {
     if (WiFi.isConnected()){
         if (connectionWasDisconnected){
             connectionWasDisconnected = false;
-            stripper.stripMustBeOff   = false; 
         }
         return;
     }
     connectionWasDisconnected = true;
-    stripper.stripMustBeOff = true;
-    stripper.programOff();
     static uint32_t timerTwoSecondsMs = millis();
 
     if ((millis() - timerTwoSecondsMs) > 2000) {
@@ -1635,7 +1631,6 @@ static void reconnectIfDisconnected(void) {
         //after the last command executes then two second will pass
         timerTwoSecondsMs = millis();
     }
-    stripper.stripMustBeOff = !WiFi.isConnected();
 }
 
 void setup() {
@@ -1652,6 +1647,9 @@ void setup() {
     Serial.println("Whitelist: " + whiteList.toJson());
     
     Serial.println();
+    setupPins();
+    stripInit();
+    stripper.run();
     sta_was_connected = connectWifi();
     if (sta_was_connected)
         Serial.println("WiFi connected");
@@ -1664,7 +1662,6 @@ void setup() {
     printWiFiInfo();
     startTime.setTime(reportIn());
     Serial.println("Start time:" + startTime.toString());
-    setupPins();
     //test(&devicePins);
     Serial.println("The device can be accessed at this path ");
     String subPath = "://" + WiFi.localIP().toString() + ":" + String(PORT) + "\"";
@@ -1672,7 +1669,6 @@ void setup() {
     Serial.println("\"http" + subPath + ".");
     server.begin();
     tellServerToSendMonitors();
-    stripInit();
 }
 
 /// <summary>
