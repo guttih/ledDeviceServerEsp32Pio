@@ -38,18 +38,21 @@ by regular post to the address Haseyla 27, 260 Reykjanesbar, Iceland.
 
 #ifdef WS2811_RGB_DATA_PIN13
     const char* deviceId = "5dd9e66f67c66604d5daf0c0"; /*Hilmars ljós*/
+     const char* hostName = "ws2811_strip"; /*max hostname 15 characters*/
     #define NUM_LEDS 50
     #define DATA_PIN 14  /*white wire  strip: http://parts.guttih.com/parts/register/5bf9a0402e0e1a69a99a9bc9*/
     #define STRIP_TYPE WS2811
     #define COLOR_SCHEME RGB
 #elif defined (CHRISTMAS_SOUTH)
     const char* deviceId = "615cabda61210d052212454d"; /*Christmas strip*/
+    const char* hostName = "hilmar_strip"; /*max hostname 15 characters*/
     #define NUM_LEDS 382
     #define DATA_PIN 16  /*white wire  strip: http://parts.guttih.com/parts/view/5fa91941bff3fe05309547ee */
     #define STRIP_TYPE WS2811
     #define COLOR_SCHEME RGB
 #elif defined (SOLEY_IN)
     const char* deviceId = "5c430cf9346ba80c6fe293a2"; /*Soley device*/
+    const char* hostName = "soley_sign"; /*max hostname 15 characters*/
     #define NUM_LEDS 129
     #define STRIP_TYPE APA102
     #define COLOR_SCHEME BGR 
@@ -57,6 +60,7 @@ by regular post to the address Haseyla 27, 260 Reykjanesbar, Iceland.
     #define DATA_PIN  14  
 #elif defined (ORRI)
     const char* deviceId = "6b0c1be468124c49928be272"; /*Orri device*/
+    const char* hostName = "orri_sign"; /*max hostname 15 characters*/
     #define NUM_LEDS 50
     #define STRIP_TYPE APA102
     #define COLOR_SCHEME BGR 
@@ -64,6 +68,7 @@ by regular post to the address Haseyla 27, 260 Reykjanesbar, Iceland.
     #define DATA_PIN  14  
 #elif defined (KITCHEN_ISLAND)
     const char* deviceId = "5d879b9ba02e5105340114d2"; /*Kitchen Iceland device*/    
+     const char* hostName = "kitchen_island"; /*max hostname 15 characters*/
     #define NUM_LEDS 170
     #define STRIP_TYPE APA102
     #define COLOR_SCHEME BGR 
@@ -71,6 +76,7 @@ by regular post to the address Haseyla 27, 260 Reykjanesbar, Iceland.
     #define DATA_PIN  14  /*green wire*/   
 #else
     const char* deviceId = "5d177b6139d052053701e0af"; /*A normal strip*/
+    const char* hostName = "expressif_hostN";
     #define NUM_LEDS 34 /*150 in a normal strip*/
     #define STRIP_TYPE WS2801
     #define COLOR_SCHEME RBG
@@ -91,12 +97,12 @@ StripHelper stripper;
 
 // Name of the wifi (accesspoint)network
 // example: "guttisWiFi"
-#ifdef SOLEY_IN
+#ifdef BLABLA
     const char* ssid = "TOTO";
 #elif defined(CHRISTMAS_SOUTH)
     const char* ssid = "TOTO";
 #else
-    const char* ssid = "swingway";
+    const char* ssid = "swingway"; /*This will be the default ssid used*/
 #endif
 // Wifi password
 const char* password = getWifiPassword();
@@ -110,11 +116,11 @@ IPAddress
 
 // ip address which this device will be operating on.
 // Example: "192.168.1.158"     
-myIp(192,168,1,212),
+myIp(192,168,1,238),
 
 //the default gateway which this device will be operating on.
 // example: "192.168.1.254"
-gateway(192,168,1,254),
+gateway(192,168,1,1),
 
 // the default gatway on this network.
 // On windows goto command
@@ -672,7 +678,7 @@ public:
     String jsonKeyValue(String key, String value);
     String jsonKeyValue(String key, int value);
     String jsonObjectType(unsigned int uiType);
-    String makeStatusResponceJson(String jsonPins, String jsonWhitelist, String jsonDate);
+    String makeStatusResponceJson(String jsonPins, String jsonWhitelist, String jsonDate, String macAddress, String deviceId, String hostName, String deviceIpAddress, int port);
     String makePostLogPinsJson(String deviceId, String jsonPins);
     String makeHttpStatusCodeString(unsigned int uiStatusCode);
     String jsonRoot(unsigned int uiType, String key, String value);
@@ -1449,7 +1455,7 @@ void handleStatus(WiFiClient* client) {
         whiteList.add(voffconServerIp);
     }
 
-    String str = urlTool.makeStatusResponceJson(devicePins.toJson(), whiteList.toJson(), startTime.toJson());
+    String str = urlTool.makeStatusResponceJson(devicePins.toJson(), whiteList.toJson(), startTime.toJson(), WiFi.macAddress(), deviceId, hostName, client->localIP().toString(), PORT);
     client->println(makeJsonResponseString(200, str));
 }
 String makeJsonPostString(String host, String url, String jsonString) {
@@ -1511,6 +1517,7 @@ void sendText(WiFiClient* client, int statusCode, const char* strSend) {
 
 void printWiFiInfo() {
     Serial.println("----------------------------------");
+
     Serial.print("WiFi.localIP   :"); Serial.println(WiFi.localIP().toString());
     Serial.print("WiFi.dnsIP     :"); Serial.println(WiFi.dnsIP().toString());
     Serial.print("WiFi SSID      :"); Serial.println(WiFi.SSID());
@@ -1520,6 +1527,8 @@ void printWiFiInfo() {
     //Serial.print  ("WiFi psk       :"); Serial.println(WiFi.psk());  
     Serial.print("WiFi.BSSIDstr  :"); Serial.println(WiFi.BSSIDstr());
     Serial.print("WiFi status    :"); Serial.println(WiFi.status());
+    Serial.print("WiFi.macAddress:"); Serial.println(WiFi.macAddress());
+    Serial.print("WiFi.getHostname   :"); Serial.println(WiFi.getHostname());
     Serial.print("VOFFCON ip and port:"); Serial.println(voffconServerIp.toString() + ":" + voffconServerPort);
 
     Serial.println("----------------------------------");
@@ -1536,8 +1545,8 @@ bool connectWifiHelper(String ssid, String password, uint32_t uiDelay) {
         WiFi.begin(ssid.c_str(), password.c_str());
     }
     
-    Serial.print("Setting host name on wifi network to: ");Serial.println(deviceId);
-    WiFi.setHostname(deviceId);
+    Serial.print("Setting host name on wifi network to: ");Serial.println(hostName);
+    WiFi.setHostname(hostName);
     // attempt to connect to Wifi network:
     int iTriesLeft = 10;
     wl_status_t status = WiFi.status();
@@ -1622,27 +1631,32 @@ static void poll_connection(void) {
 }
 static void reconnectIfDisconnected(void) {
     static bool connectionWasDisconnected = false;
+    static int connectionCount = 0;
     if (WiFi.isConnected()){
         if (connectionWasDisconnected){
             connectionWasDisconnected = false;
+            connectionCount = 0;
         }
+        
         return;
     }
+
     connectionWasDisconnected = true;
     static uint32_t timerTwoSecondsMs = millis();
-
-    if ((millis() - timerTwoSecondsMs) > 2000) {
+    
+    if ((millis() - timerTwoSecondsMs) > 10000) {
 
         //excecute commands at one second interval
-        connectWifi();
-
+        // connectWifi();
+        Serial.print("Reconnecting ");Serial.print(++connectionCount);Serial.println(" to WiFi...");
+        WiFi.disconnect();
+        WiFi.reconnect();
         //after the last command executes then two second will pass
         timerTwoSecondsMs = millis();
     }
 }
 
 void setup() {
-    
     //Initialize serial and wait for port to open:
    
     Serial.begin(115200);
@@ -2688,11 +2702,16 @@ String GUrl::jsonObjectType(unsigned int uiType) {
     return jsonKeyValue("type", str);
 }
 
-String GUrl::makeStatusResponceJson(String jsonPins, String jsonWhitelist, String jsonDate) {
+String GUrl::makeStatusResponceJson(String jsonPins, String jsonWhitelist, String jsonDate, String macAddress, String deviceId, String hostName, String deviceIpAddress, int port) {
     String str = "{" +
-        jsonObjectType(OBJECTTYPE_STATUS) + "," +
-        jsonKeyValue("pins", jsonPins) + "," +
-        jsonKeyValue("whitelist", jsonWhitelist) + "," +
+        jsonObjectType(OBJECTTYPE_STATUS)                + "," +
+        jsonKeyValue("pins", jsonPins)                   + "," +
+        jsonKeyValue("whitelist", jsonWhitelist)         + "," +
+        jsonKeyValue("macAddress","\""+macAddress+ "\"") + "," +
+        jsonKeyValue("deviceId", "\""+deviceId+ "\"")    + "," +
+        jsonKeyValue("hostName", "\""+hostName+ "\"")    + "," +
+        jsonKeyValue("ip", "\""+deviceIpAddress+ "\"")   + "," +
+        jsonKeyValue("port", String(port))               + "," +
         jsonKeyValue("date", jsonDate) +
         "}";
     return str;
