@@ -29,7 +29,8 @@ by regular post to the address Haseyla 27, 260 Reykjanesbar, Iceland.
 //#define FASTLED_ESP32_FLASH_LOCK 1
 
 
-#define CHRISTMAS_SOUTH /*About 310 leds*/
+// #define CHRISTMAS_SOUTH /*About 310 leds*/
+#define ORRI /*apa*/
 
 #include "StripHelper.h"
 #include "config.h"
@@ -50,6 +51,13 @@ by regular post to the address Haseyla 27, 260 Reykjanesbar, Iceland.
 #elif defined (SOLEY_IN)
     const char* deviceId = "5c430cf9346ba80c6fe293a2"; /*Soley device*/
     #define NUM_LEDS 129
+    #define STRIP_TYPE APA102
+    #define COLOR_SCHEME BGR 
+    #define CLOCK_PIN 13  
+    #define DATA_PIN  14  
+#elif defined (ORRI)
+    const char* deviceId = "6b0c1be468124c49928be272"; /*Orri device*/
+    #define NUM_LEDS 50
     #define STRIP_TYPE APA102
     #define COLOR_SCHEME BGR 
     #define CLOCK_PIN 13  
