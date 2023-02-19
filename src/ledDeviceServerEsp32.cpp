@@ -30,7 +30,6 @@ by regular post to the address Haseyla 27, 260 Reykjanesbar, Iceland.
 
 
 // #define CHRISTMAS_SOUTH /*About 310 leds*/
-#define ORRI /*apa*/
 
 #include "StripHelper.h"
 #include "config.h"
@@ -58,10 +57,10 @@ by regular post to the address Haseyla 27, 260 Reykjanesbar, Iceland.
     #define COLOR_SCHEME BGR 
     #define CLOCK_PIN 13  
     #define DATA_PIN  14  
-#elif defined (ORRI)
+#elif defined (ORRI_IN)
     const char* deviceId = "6b0c1be468124c49928be272"; /*Orri device*/
     const char* hostName = "orri_sign"; /*max hostname 15 characters*/
-    #define NUM_LEDS 50
+    #define NUM_LEDS 300
     #define STRIP_TYPE APA102
     #define COLOR_SCHEME BGR 
     #define CLOCK_PIN 13  

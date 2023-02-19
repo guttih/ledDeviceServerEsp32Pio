@@ -203,6 +203,9 @@ String StripHelper::getProgramName(STRIP_PROGRAMS stripProgram) {
 #ifdef SOLEY_IN    
         case SOLEY          : return "SOLEY";
 #endif
+#ifdef ORRI_IN    
+        case ORRI          : return "ORRI";
+#endif
     }
     return "Invalid program";
 }
@@ -220,9 +223,12 @@ String StripHelper::getProgramDescription(STRIP_PROGRAMS stripProgram) {
         case STARS          : return "Color 0 is the color of a start pixel.  Color 1 is the background color.";
         case RAINBOW        : return "There is no change if both values 0.  Try changing them to figure out what you like.  The program is very versatile. Test and see :)";
         case CYLON          : return "Multiple color will flow down the strip.";
-        case SECTIONS       : return "Dived the strip to 4 color sections.  Possbile colors are from 0-4. Color 0 is for section 1, color 1 is for section 2 and so on.";
+        case SECTIONS       : return "Divides the strip to 4 color sections.  Possible colors are from 0-4. Color 0 is for section 1, color 1 is for section 2 and so on.";
 #ifdef SOLEY_IN            
         case SOLEY          : return "Color 0 will be set to underline.  Color 1 will be set to S.  Color 2 will be set to O.  Color 3 will be set to L.  Color 4 will be set to E.  Color 5 will be set to Y.";
+#endif 
+#ifdef ORRI_IN            
+        case ORRI          : return "Color 0 will be set to underline.  Color 1 will be set to O.  Color 2 will be set to first R.  Color 3 will be set to second R.  Color 4 will be set to I.";
 #endif        
     }
     return "This program is one of the available program.  The possible programs are only from 0 to " + String(((int)STRIP_PROGRAMS::STRIP_PROGRAMS_COUNT)-1) + ".";
@@ -256,6 +262,10 @@ String StripHelper::getProgramInfoAsJsonArray(STRIP_PROGRAMS stripProgram) {
                                 break;
 #ifdef SOLEY_IN    
         case SOLEY          :   colors = COLOR_COUNT;                                           
+                                break;
+#endif
+#ifdef ORRI_IN    
+        case ORRI          :   colors = COLOR_COUNT-1;
                                 break;
 #endif
 
@@ -392,6 +402,18 @@ void StripHelper::programSoley() {
         fillByIndex( 73,  85, getColorBank(3)); // 3 = letterL  
         fillByIndex( 86, 104, getColorBank(4)); // 4 = letterE  
         fillByIndex(105, 125, getColorBank(5)); // 5 = letterY  
+		fastLED->show();
+}
+
+void StripHelper::programOrri() {
+        
+        stepUp();
+		// fillByIndex(126, 128, getColorBank(0)); // 0 = underLine 
+        fillByIndex(  0,  14, getColorBank(0)); // 0 = underLine 
+        fillByIndex( 15,  44, getColorBank(1)); // 1 = letterO
+        fillByIndex( 45,  72, getColorBank(2)); // 2 = letterR  
+        fillByIndex( 73,  85, getColorBank(3)); // 3 = letterR  
+        fillByIndex( 86, 104, getColorBank(4)); // 4 = letterI  
 		fastLED->show();
 }
 void StripHelper::programMultiColor(){
@@ -660,6 +682,9 @@ void StripHelper::run() {
 #ifdef SOLEY_IN    
         case SOLEY       : programSoley(); break;
 #endif
+#ifdef ORRI_IN    
+        case ORRI       : programOrri(); break;
+#endif
 
     }
 }
@@ -681,6 +706,9 @@ void StripHelper::initProgram(STRIP_PROGRAMS programToSet) {
         
 #ifdef SOLEY_IN        
         case SOLEY       : setDirection(true); break;
+#endif
+#ifdef ORRI_IN        
+        case ORRI       : setDirection(true); break;
 #endif
     }
 }

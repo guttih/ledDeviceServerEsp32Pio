@@ -1,6 +1,8 @@
 #ifndef _StripHelper_h
 #define _StripHelper_h
 
+#define ORRI_IN /*apa*/
+
 #include <WiFi.h>
 #include <HTTPClient.h>
 
@@ -26,6 +28,9 @@ enum STRIP_PROGRAMS {
 
 #ifdef SOLEY_IN    
     SOLEY,
+#endif
+#ifdef ORRI_IN    
+    ORRI,
 #endif
     /*add next type above this line*/
     STRIP_PROGRAMS_COUNT
@@ -100,6 +105,7 @@ class StripHelper {
         void programCylonFadeall();
         void programCylon();
         void programSoley();
+        void programOrri();
         void programSections();
         void programStepOne(CRGB onColor, CRGB trailColor);
         void programUpDown();
