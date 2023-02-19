@@ -2,6 +2,7 @@
 #define _StripHelper_h
 
 #define ORRI_IN /*apa*/ 
+// #define SOLEY_IN
 // #define KITCHEN_ISLAND /*apa*/
 
 #include <WiFi.h>
