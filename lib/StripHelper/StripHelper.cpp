@@ -40,7 +40,7 @@ void StripHelper::reset() {
     value2 = 0;
     value3 = 0;
     value4 = 0;
-    brightness = 255;
+    brightness = 5;
     program = STRIP_PROGRAMS::MULTI_COLOR;
     // stripColors[0] = CRGB::Magenta;
     // stripColors[1] = CRGB::Red;

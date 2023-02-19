@@ -1,7 +1,8 @@
 #ifndef _StripHelper_h
 #define _StripHelper_h
 
-#define ORRI_IN /*apa*/
+#define ORRI_IN /*apa*/ 
+// #define KITCHEN_ISLAND /*apa*/
 
 #include <WiFi.h>
 #include <HTTPClient.h>

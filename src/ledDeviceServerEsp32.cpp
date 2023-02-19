@@ -107,7 +107,7 @@ StripHelper stripper;
 const char* password = getWifiPassword();
 // port number which this device will be operating on.
 // example: 5100
-const int   PORT = 5100;
+const int   PORT = 80;
 // example: 6100
 const int   voffconServerPort = 6100;
 
@@ -1412,7 +1412,6 @@ void ExtractFromJsonAndSetStripValues(JsonData *rootObject){
     if ((STRIP_PROGRAMS)ulCom == STRIP_PROGRAMS::RESET){
         devicePins.get(BRIGHTNESS_DEVICE_PIN)->setValue(stripper.getBrightness()*4);
     } 
-    
 }
 
 void handleCustom(WiFiClient* client, unsigned int postMethod, String callingUrl) {
@@ -1679,7 +1678,7 @@ void setup() {
         Serial.println("UNABLE to connect WiFi!");
         while (true);
     }
-    setupArduinoOTA(deviceId);
+    setupArduinoOTA(hostName);
     printWiFiInfo();
     startTime.setTime(reportIn());
     Serial.println("Start time:" + startTime.toString());
