@@ -1,5 +1,7 @@
+
 #include "StripOrri.h"
 
+#ifdef ORRI_IN
 StripOrri::StripOrri()
 {
     StripHelper();
@@ -53,3 +55,16 @@ void StripOrri::initProgram(STRIP_PROGRAMS programToSet) {
     }
 }
 
+void StripOrri::programOrri() {
+        
+        stepUp();
+		// fillByIndex(126, 128, getColorBank(0)); // 0 = underLine 
+        fillByIndex(  0,  14, getColorBank(0)); // 0 = underLine 
+        fillByIndex( 15,  44, getColorBank(1)); // 1 = letterO
+        fillByIndex( 45,  72, getColorBank(2)); // 2 = letterR  
+        fillByIndex( 73,  85, getColorBank(3)); // 3 = letterR  
+        fillByIndex( 86, 104, getColorBank(4)); // 4 = letterI  
+		fastLED->show();
+}
+
+#endif 

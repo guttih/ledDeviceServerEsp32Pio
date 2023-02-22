@@ -199,11 +199,7 @@ String StripHelper::getProgramName(STRIP_PROGRAMS stripProgram) {
         case CYLON          : return "Cylon";
         case STARS          : return "Stars";
         case SECTIONS       : return "Sections";
-        
-#ifdef SOLEY_IN    
-        case SOLEY          : return "SOLEY";
-#endif
-        default            : return "Invalid program";
+        default             : return "Invalid program";
     }
 }
 
@@ -221,9 +217,6 @@ String StripHelper::getProgramDescription(STRIP_PROGRAMS stripProgram) {
         case RAINBOW        : return "There is no change if both values 0.  Try changing them to figure out what you like.  The program is very versatile. Test and see :)";
         case CYLON          : return "Multiple color will flow down the strip.";
         case SECTIONS       : return "Divides the strip to 4 color sections.  Possible colors are from 0-4. Color 0 is for section 1, color 1 is for section 2 and so on.";
-#ifdef SOLEY_IN            
-        case SOLEY          : return "Color 0 will be set to underline.  Color 1 will be set to S.  Color 2 will be set to O.  Color 3 will be set to L.  Color 4 will be set to E.  Color 5 will be set to Y.";
-#endif
         default            : return "This program is one of the available program.  The possible programs are only from 0 to " + String(((int)STRIP_PROGRAMS::STRIP_PROGRAMS_COUNT)-1) + ".";
     }
     
@@ -248,32 +241,27 @@ ProgramValueInfo StripHelper::getProgramValuesAsJsonArray(STRIP_PROGRAMS stripPr
     String values = "[";
     switch(stripProgram){
         case OFF            :
-        case RESET          :   break;
-        case RAINBOW        :   values+="\"Increment by\",\"Delta hue\"";   
-                                break;
-        case SINGLE_COLOR   :   colors = 1;                                           
-                                break;
-        case MULTI_COLOR    :   colors = COLOR_COUNT;    
-                                values+="\"Number of colors\"";                                           
-                                break;
-        case FIRE           :   values+="\"Cooling: How much does the air cool as it rises?  Less cooling = taller flames.  More cooling = shorter flames. (Default 1, suggested range 20-100)\",\"Sparking: What chance (out of 255) is there that a new spark will be lit? Higher chance = more roaring fire.  Lower chance = more flickery fire.  (Default 20, suggested range 50-200).\",\"Simple 0 = true\",\"Reverse direction 0 = false\"";
-                                break; 
-        case DOWN           : 
-        case UP_DOWN        :   break;
-        case STARS          :   colors = 2; values+="\"Number of stars\",\"Delay between new stars\"";
-                                break;
-        case CYLON          :   colors = 0;  
-                                //  this would be for two values values+="\"Delay between fades\",\"Something else\""; 
-                                break;
-        case SECTIONS       :   colors = 4;
-                                values+="\"Starting number of section 2\",\"Starting number of section 3\",\"Starting number of section 4\"";
-                                break;
-#ifdef SOLEY_IN    
-        case SOLEY          :   colors = COLOR_COUNT;                                           
-                                break;
-#endif
-
-        default             :  break;
+        case RESET          : break;
+        case RAINBOW        : values+="\"Increment by\",\"Delta hue\"";   
+                              break;
+        case SINGLE_COLOR   : colors = 1;                                           
+                              break;
+        case MULTI_COLOR    : colors = COLOR_COUNT;    
+                              values+="\"Number of colors\"";                                           
+                              break;
+        case FIRE           : values+="\"Cooling: How much does the air cool as it rises?  Less cooling = taller flames.  More cooling = shorter flames. (Default 1, suggested range 20-100)\",\"Sparking: What chance (out of 255) is there that a new spark will be lit? Higher chance = more roaring fire.  Lower chance = more flickery fire.  (Default 20, suggested range 50-200).\",\"Simple 0 = true\",\"Reverse direction 0 = false\"";
+                              break; 
+        case DOWN           :
+        case UP_DOWN        : break;
+        case STARS          : colors = 2; values+="\"Number of stars\",\"Delay between new stars\"";
+                              break;
+        case CYLON          : colors = 0;  
+                              //  this would be for two values values+="\"Delay between fades\",\"Something else\""; 
+                              break;
+        case SECTIONS       : colors = 4;
+                              values+="\"Starting number of section 2\",\"Starting number of section 3\",\"Starting number of section 4\"";
+                              break;
+        default             : break;
     }
     values += "]";
 
@@ -404,30 +392,6 @@ void StripHelper::programCylon() {
 		programCylonFadeall();
 }
 
-void StripHelper::programSoley() {
-        
-        stepUp();
-		fillByIndex(126, 128, getColorBank(0)); // 0 = underLine 
-        fillByIndex(  0,  14, getColorBank(0)); // 0 = underLine 
-        fillByIndex( 15,  44, getColorBank(1)); // 1 = letterS   
-        fillByIndex( 45,  72, getColorBank(2)); // 2 = letterO  
-        fillByIndex( 73,  85, getColorBank(3)); // 3 = letterL  
-        fillByIndex( 86, 104, getColorBank(4)); // 4 = letterE  
-        fillByIndex(105, 125, getColorBank(5)); // 5 = letterY  
-		fastLED->show();
-}
-
-void StripHelper::programOrri() {
-        
-        stepUp();
-		// fillByIndex(126, 128, getColorBank(0)); // 0 = underLine 
-        fillByIndex(  0,  14, getColorBank(0)); // 0 = underLine 
-        fillByIndex( 15,  44, getColorBank(1)); // 1 = letterO
-        fillByIndex( 45,  72, getColorBank(2)); // 2 = letterR  
-        fillByIndex( 73,  85, getColorBank(3)); // 3 = letterR  
-        fillByIndex( 86, 104, getColorBank(4)); // 4 = letterI  
-		fastLED->show();
-}
 void StripHelper::programMultiColor(){
      int colorCount = value1 <= COLOR_COUNT && value1 > 0? value1 : COLOR_COUNT;
 
@@ -680,9 +644,6 @@ void StripHelper::runProgram(STRIP_PROGRAMS stripProgram) {
         case STARS       : programStars(); break;
         case CYLON       : programCylon(); break;
         case SECTIONS    : programSections();break;
-#ifdef SOLEY_IN    
-        case SOLEY       : programSoley(); break;
-#endif
         default         : break; // do nothing
 
     }
@@ -720,9 +681,6 @@ void StripHelper::initProgram(STRIP_PROGRAMS programToSet) {
         case UP_DOWN     : setDirection(false); toggleDirection(); break;
         case CYLON       : setDirection(true);  toggleDirection(); break;
         case STARS       : programStarsInit(); break;
-#ifdef SOLEY_IN        
-        case SOLEY       : setDirection(true); break;
-#endif
         case STRIP_PROGRAMS_COUNT:
         default                  : break; // Do nothing for STRIP_PROGRAMS_COUNT 
     }

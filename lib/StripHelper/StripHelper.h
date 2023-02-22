@@ -1,10 +1,6 @@
 #ifndef _StripHelper_h
 #define _StripHelper_h
 
-#define ORRI_IN /*apa*/ 
-// #define SOLEY_IN
-// #define KITCHEN_ISLAND /*apa*/
-
 #include <WiFi.h>
 #include <HTTPClient.h>
 
@@ -12,6 +8,12 @@
 #define FASTLED_INTERNAL
 #include <FastLED.h>
 
+// #define WS2811_RGB_DATA_PIN13
+// #define CHRISTMAS_SOUTH
+// #define SOLEY_IN /*apa*/ 
+#define ORRI_IN /*apa*/ 
+// #define KITCHEN_ISLAND /*apa*/
+// #define KITCHEN_ISLAND
 
 #define COLOR_COUNT 6
 
@@ -30,8 +32,7 @@ enum STRIP_PROGRAMS {
 
 #ifdef SOLEY_IN    
     SOLEY,
-#endif
-#ifdef ORRI_IN    
+#elif defined (ORRI_IN)
     ORRI,
 #endif
     /*add next type above this line*/
@@ -110,8 +111,6 @@ class StripHelper {
                 
         void programCylonFadeall();
         void programCylon();
-        void programSoley();
-        void programOrri();
         void programSections();
         void programStepOne(CRGB onColor, CRGB trailColor);
         void programUpDown();

@@ -21,18 +21,17 @@ by regular post to the address Haseyla 27, 260 Reykjanesbar, Iceland.
     Program for Board: ESP32 Dev Module
 */
 
-//Christmas lights: see: ali: https://www.aliexpress.com/item/32444415410.html?spm=a2g0s.9042311.0.0.27424c4dQ0AYL8  gparts: http://parts.guttih.com/parts/register/5bf9a0402e0e1a69a99a9bc9
-//#define WS2811_RGB_DATA_PIN13
-//#define SOLEY_IN
+//Christmas lights: see: ali: https://www.aliexpress.com/item/32444415410.html?spm=a2g0s.9042311.0.0.27424c4dQ0AYL8  gparts: http://parts.guttih.com/parts/view/5bf9a0402e0e1a69a99a9bc9
+
 
 //#define FASTLED_ALLOW_INTERRUPTS 0
 //#define FASTLED_ESP32_FLASH_LOCK 1
 
-
-// #define CHRISTMAS_SOUTH /*About 310 leds*/
-
+/*
+    To select the different strip devices you must add a define declaration
+    to the file StripHelper.h
+*/
 #include "StripHelper.h"
-#include "StripOrri.h"
 #include "config.h"
 #include "upload-ota.h"
 
@@ -53,6 +52,7 @@ by regular post to the address Haseyla 27, 260 Reykjanesbar, Iceland.
     #define COLOR_SCHEME RGB
     StripHelper stripper;
 #elif defined (SOLEY_IN)
+    #include "StripSoley.h"
     const char* deviceId = "5c430cf9346ba80c6fe293a2"; /*Soley device*/
     const char* hostName = "soley_sign"; /*max hostname 15 characters*/
     #define NUM_LEDS 129
@@ -60,10 +60,11 @@ by regular post to the address Haseyla 27, 260 Reykjanesbar, Iceland.
     #define COLOR_SCHEME BGR 
     #define CLOCK_PIN 13  
     #define DATA_PIN  14 
-    StripHelper stripper; 
+    StripSoley stripper; 
 #elif defined (ORRI_IN)
+    #include "StripOrri.h"
     const char* deviceId = "6b0c1be468124c49928be272"; /*Orri device*/
-    const char* hostName = "orri_sign"; /*max hostname 15 characters*/
+    const char* hostName = "orSolX_sign"; /*max hostname 15 characters*/
     #define NUM_LEDS 300
     #define STRIP_TYPE APA102
     #define COLOR_SCHEME BGR 
