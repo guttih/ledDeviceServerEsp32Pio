@@ -32,6 +32,7 @@ by regular post to the address Haseyla 27, 260 Reykjanesbar, Iceland.
 // #define CHRISTMAS_SOUTH /*About 310 leds*/
 
 #include "StripHelper.h"
+#include "StripOrri.h"
 #include "config.h"
 #include "upload-ota.h"
 
@@ -42,6 +43,7 @@ by regular post to the address Haseyla 27, 260 Reykjanesbar, Iceland.
     #define DATA_PIN 14  /*white wire  strip: http://parts.guttih.com/parts/register/5bf9a0402e0e1a69a99a9bc9*/
     #define STRIP_TYPE WS2811
     #define COLOR_SCHEME RGB
+    StripHelper stripper;
 #elif defined (CHRISTMAS_SOUTH)
     const char* deviceId = "615cabda61210d052212454d"; /*Christmas strip*/
     const char* hostName = "hilmar_strip"; /*max hostname 15 characters*/
@@ -49,6 +51,7 @@ by regular post to the address Haseyla 27, 260 Reykjanesbar, Iceland.
     #define DATA_PIN 16  /*white wire  strip: http://parts.guttih.com/parts/view/5fa91941bff3fe05309547ee */
     #define STRIP_TYPE WS2811
     #define COLOR_SCHEME RGB
+    StripHelper stripper;
 #elif defined (SOLEY_IN)
     const char* deviceId = "5c430cf9346ba80c6fe293a2"; /*Soley device*/
     const char* hostName = "soley_sign"; /*max hostname 15 characters*/
@@ -56,7 +59,8 @@ by regular post to the address Haseyla 27, 260 Reykjanesbar, Iceland.
     #define STRIP_TYPE APA102
     #define COLOR_SCHEME BGR 
     #define CLOCK_PIN 13  
-    #define DATA_PIN  14  
+    #define DATA_PIN  14 
+    StripHelper stripper; 
 #elif defined (ORRI_IN)
     const char* deviceId = "6b0c1be468124c49928be272"; /*Orri device*/
     const char* hostName = "orri_sign"; /*max hostname 15 characters*/
@@ -64,7 +68,8 @@ by regular post to the address Haseyla 27, 260 Reykjanesbar, Iceland.
     #define STRIP_TYPE APA102
     #define COLOR_SCHEME BGR 
     #define CLOCK_PIN 13  
-    #define DATA_PIN  14  
+    #define DATA_PIN  14 
+    StripOrri stripper; 
 #elif defined (KITCHEN_ISLAND)
     const char* deviceId = "5d879b9ba02e5105340114d2"; /*Kitchen Iceland device*/    
      const char* hostName = "kitchen_island"; /*max hostname 15 characters*/
@@ -73,6 +78,7 @@ by regular post to the address Haseyla 27, 260 Reykjanesbar, Iceland.
     #define COLOR_SCHEME BGR 
     #define CLOCK_PIN 13  /*yellow wire*/
     #define DATA_PIN  14  /*green wire*/   
+    StripHelper stripper;
 #else
     const char* deviceId = "5d177b6139d052053701e0af"; /*A normal strip*/
     const char* hostName = "expressif_hostN";
@@ -81,12 +87,13 @@ by regular post to the address Haseyla 27, 260 Reykjanesbar, Iceland.
     #define COLOR_SCHEME RBG
     #define CLOCK_PIN 13  /*green wire*/
     #define DATA_PIN  14  /*blue wire*/ 
+    StripHelper stripper;
 #endif
 
 #define BRIGHTNESS_DEVICE_PIN 15
 
 CRGB leds[NUM_LEDS];
-StripHelper stripper;
+
 
 
 
@@ -1336,20 +1343,18 @@ void stripInit(){
 #else
     FastLED.addLeds<STRIP_TYPE, DATA_PIN, COLOR_SCHEME>(leds, NUM_LEDS);
 #endif
+    Serial.print(", Led count: ");Serial.println(NUM_LEDS);
     stripper.initialize(&FastLED);
-    Serial.println("\n - - - - - - -     Available strip commands     - - - - - - - -");
+    Serial.println("\n - - - - - - -    Available strip commands    - - - - - - - -");
     Serial.println(stripper.getAllProgramNames());
-    Serial.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
+    Serial.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
     stripper.initProgram(stripper.getProgram());
-    Serial.print("Led count: ");Serial.println(NUM_LEDS);
 }
 
 void ExtractFromJsonAndSetStripValues(JsonData *rootObject){
-    unsigned long stepDelay;
     const int VARIABLE_COUNT = 4;
     unsigned long values[VARIABLE_COUNT] = {0,0,0,0};
     int i;
-    STRIP_PROGRAMS program;
     if (rootObject->getType() != JSONTYPE_OBJECT) {
         Serial.println("Invalid strip object");
         return;
@@ -1531,6 +1536,7 @@ void printWiFiInfo() {
 
     Serial.println("----------------------------------");
 }
+
 bool connectWifiHelper(String ssid, String password, uint32_t uiDelay) {
     Serial.println();
     Serial.print("Connecting to ");
@@ -1613,20 +1619,6 @@ bool connectWifi() {
 // }
 
 static bool sta_was_connected = true;
-static void poll_connection(void) {
-    static uint32_t ms = millis();
-
-    if (!WiFi.isConnected() && (millis() - ms) > 1000 * 5) {
-        ms = millis();
-
-        if (sta_was_connected) {
-            Serial.println("Reconnecting");
-            WiFi.reconnect();
-            server.begin();
-        }
-        else WiFi.begin();
-    }
-}
 static void reconnectIfDisconnected(void) {
     static bool connectionWasDisconnected = false;
     static int connectionCount = 0;
@@ -1763,7 +1755,7 @@ void loop() {
                     // you're starting a new line
                     currentLineIsBlank = true;
                     if (strstr(linebuf, "GET /started") > 0) {
-                        method == METHOD_GET;
+                        method = METHOD_GET;
 
                         Serial.println(" /started");
                         String str = "{\"date\":";
@@ -2445,12 +2437,12 @@ GTime::GTime(const GTime& gTime) {
 /// There are 1000 milliSeconds in a second
 /// </param>
 void GTime::setTime(unsigned long milliSeconds) {
-    unsigned long d=0, y, s, m, h, mi;
+    unsigned long d=0, y, s, m, h;
     y = ((unsigned long)60 * (unsigned long)60 * (unsigned long)1000);
     h = milliSeconds / y;
     m = (milliSeconds - (h * y)) / (y / 60);
     s = (milliSeconds - (h * y) - (m * (y / 60))) / 1000;
-    mi = milliSeconds - (h * y) - (m * (y / 60)) - (s * 1000);
+    // mi = milliSeconds - (h * y) - (m * (y / 60)) - (s * 1000);
 
     if (h > 23)
     {
@@ -3325,7 +3317,6 @@ JsonData* JsonData::object(String* members, JsonData* parent)
             current = new JsonData(JSONTYPE_OBJECT, parent);
         else if (strArr.length() > 0)
         {
-            JSONTYPE objType = getValueTypeFromChar(strArr.charAt(0));
             if (parent->mType == JSONTYPE_KEY_VALUE)
                 current = new JsonData(JSONTYPE_OBJECT, parent);
         }
@@ -3429,7 +3420,6 @@ JsonData* JsonData::pair(String* keyValues, JsonData* parent)
     String strKeyX = keyValues->substring(keyIndexOfFirstChar, keyIndexOfFirstChar + keyLength);
     String strValX = keyValues->substring(valueIndexOfFirstChar, valueIndexOfFirstChar + valueLength);
     JSONTYPE valType = getValueTypeFromChar(strValX.charAt(0));
-    bool isStringValue = valType == JSONTYPE_STRING;
 
     if (valType == JSONTYPE_INVALID)
         return setRootInvalid();
@@ -3455,17 +3445,18 @@ bool JsonData::validateValue(const JSONTYPE jsonValueType, String stringValue)
     //todo:: use JSONTYPE instead
     switch (jsonValueType)
     {
-    case JSONTYPE_ARRAY: return JSONTYPE_ARRAY == getType(stringValue);
-    case JSONTYPE_OBJECT: return JSONTYPE_OBJECT == getType(stringValue);
-    case JSONTYPE_ULONG: return JSONTYPE_ULONG == getType(stringValue);
-    case JSONTYPE_LONG: return JSONTYPE_LONG == getType(stringValue);
-    case JSONTYPE_FLOAT: return JSONTYPE_FLOAT == getType(stringValue);
-    case JSONTYPE_BOOL: return JSONTYPE_BOOL == getType(stringValue);
-    case JSONTYPE_NULL: return JSONTYPE_NULL == getType(stringValue);
-    case JSONTYPE_KEY_VALUE: return true;
+        case JSONTYPE_ARRAY:     return JSONTYPE_ARRAY == getType(stringValue);
+        case JSONTYPE_OBJECT:    return JSONTYPE_OBJECT == getType(stringValue);
+        case JSONTYPE_ULONG:     return JSONTYPE_ULONG == getType(stringValue);
+        case JSONTYPE_LONG:      return JSONTYPE_LONG == getType(stringValue);
+        case JSONTYPE_FLOAT:     return JSONTYPE_FLOAT == getType(stringValue);
+        case JSONTYPE_BOOL:      return JSONTYPE_BOOL == getType(stringValue);
+        case JSONTYPE_NULL:      return JSONTYPE_NULL == getType(stringValue);
+        case JSONTYPE_KEY_VALUE: return true;
+        default:                 return false;
     }
 
-    return false;
+    
 }
 
 /// <summary>
@@ -3627,18 +3618,19 @@ String JsonData::jsonTypeString(const JSONTYPE type)
 {
     switch (type)
     {
-    case JSONTYPE_ARRAY: return "JSONTYPE_ARRAY";
-    case JSONTYPE_OBJECT: return "JSONTYPE_OBJECT";
+    case JSONTYPE_ARRAY:     return "JSONTYPE_ARRAY";
+    case JSONTYPE_OBJECT:    return "JSONTYPE_OBJECT";
     case JSONTYPE_KEY_VALUE: return "JSONTYPE_KEY_VALUE";
-    case JSONTYPE_STRING: return "JSONTYPE_STRING";
-    case JSONTYPE_ULONG: return "JSONTYPE_ULONG";
-    case JSONTYPE_LONG: return "JSONTYPE_LONG";
-    case JSONTYPE_FLOAT: return "JSONTYPE_FLOAT";
-    case JSONTYPE_BOOL: return "JSONTYPE_BOOL";
-    case JSONTYPE_NULL: return "JSONTYPE_NULL";
+    case JSONTYPE_STRING:    return "JSONTYPE_STRING";
+    case JSONTYPE_ULONG:     return "JSONTYPE_ULONG";
+    case JSONTYPE_LONG:      return "JSONTYPE_LONG";
+    case JSONTYPE_FLOAT:     return "JSONTYPE_FLOAT";
+    case JSONTYPE_BOOL:      return "JSONTYPE_BOOL";
+    case JSONTYPE_NULL:      return "JSONTYPE_NULL";
+    default:                 return "JSONTYPE_INVALID";
     }
 
-    return "JSONTYPE_INVALID";
+    
 }
 
 /// <summary>
@@ -4611,8 +4603,7 @@ int PinWatchList::deleteMonitorFromJsonObject(JsonData* root)
     if (root->getType() != JSONTYPE::JSONTYPE_ARRAY) {
         return 0;
     }
-    int pinNumber, index;
-    JsonData* child;
+    int pinNumber;
     current = root->getChildAt(0);
     while (  current && (current->getType() == JSONTYPE::JSONTYPE_ULONG || 
                         current->getType() == JSONTYPE::JSONTYPE_LONG      )  ) 

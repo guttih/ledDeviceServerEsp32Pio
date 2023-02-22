@@ -1,6 +1,15 @@
 {
     "files.associations": {
         "*.inoz": "cpp",
-        "algorithm": "cpp"
-    }
+        "algorithm": "cpp",
+        "array": "cpp",
+        "deque": "cpp",
+        "map": "cpp",
+        "*.tcc": "cpp",
+        "string": "cpp",
+        "unordered_map": "cpp",
+        "unordered_set": "cpp",
+        "vector": "cpp"
+    },
+    "cmake.sourceDirectory": "C:/Users/gutti/source/repos/ledDeviceServerEsp32Pio/.pio/libdeps/esp32doit-devkit-v1/Unity"
 }

@@ -187,7 +187,6 @@ int StripHelper::setDirection(bool forward) {
 }
 
 String StripHelper::getProgramName(STRIP_PROGRAMS stripProgram) {
-
     switch(stripProgram){
         case OFF            : return "Off";
         case RESET          : return "Reset";
@@ -203,8 +202,6 @@ String StripHelper::getProgramName(STRIP_PROGRAMS stripProgram) {
         
 #ifdef SOLEY_IN    
         case SOLEY          : return "SOLEY";
-#elif defined (ORRI_IN)
-        case ORRI          : return "ORRI";
 #endif
         default            : return "Invalid program";
     }
@@ -226,8 +223,6 @@ String StripHelper::getProgramDescription(STRIP_PROGRAMS stripProgram) {
         case SECTIONS       : return "Divides the strip to 4 color sections.  Possible colors are from 0-4. Color 0 is for section 1, color 1 is for section 2 and so on.";
 #ifdef SOLEY_IN            
         case SOLEY          : return "Color 0 will be set to underline.  Color 1 will be set to S.  Color 2 will be set to O.  Color 3 will be set to L.  Color 4 will be set to E.  Color 5 will be set to Y.";
-#elif defined (ORRI_IN)           
-        case ORRI          : return "Color 0 will be set to underline.  Color 1 will be set to O.  Color 2 will be set to first R.  Color 3 will be set to second R.  Color 4 will be set to I.";
 #endif
         default            : return "This program is one of the available program.  The possible programs are only from 0 to " + String(((int)STRIP_PROGRAMS::STRIP_PROGRAMS_COUNT)-1) + ".";
     }
@@ -235,6 +230,20 @@ String StripHelper::getProgramDescription(STRIP_PROGRAMS stripProgram) {
 }
 
 String StripHelper::getProgramInfoAsJsonArray(STRIP_PROGRAMS stripProgram) {
+   
+    ProgramValueInfo valueInfo = getProgramValuesAsJsonArray(stripProgram);
+
+    String ret ="{";
+    ret+=      MakeJsonKeyVal("name"       , quotes(getProgramName(stripProgram)));
+    ret+="," + MakeJsonKeyVal("description", quotes(getProgramDescription(stripProgram)));
+    
+    ret+="," + MakeJsonKeyVal("values"  , valueInfo.variableDescriptionArray);
+    ret+="," + MakeJsonKeyVal("colors"     , String(valueInfo.colors));
+    ret+="}";
+    return ret;
+}
+
+ProgramValueInfo StripHelper::getProgramValuesAsJsonArray(STRIP_PROGRAMS stripProgram) {
     int colors = 0;
     String values = "[";
     switch(stripProgram){
@@ -262,23 +271,16 @@ String StripHelper::getProgramInfoAsJsonArray(STRIP_PROGRAMS stripProgram) {
 #ifdef SOLEY_IN    
         case SOLEY          :   colors = COLOR_COUNT;                                           
                                 break;
-#elif defined (ORRI_IN)   
-        case ORRI          :   colors = COLOR_COUNT-1;
-                                break;
 #endif
 
-        default             :   return "{}";
+        default             :  break;
     }
     values += "]";
 
-    String ret ="{";
-    ret+=      MakeJsonKeyVal("name"       , quotes(getProgramName(stripProgram)));
-    ret+="," + MakeJsonKeyVal("description", quotes(getProgramDescription(stripProgram)));
-    
-    ret+="," + MakeJsonKeyVal("values"  , values);
-    ret+="," + MakeJsonKeyVal("colors"     , String(colors));
-    ret+="}";
-    return ret;
+    return ProgramValueInfo {
+        values,
+        colors
+    };
 }
 
 String StripHelper::getAllProgramNames() {
@@ -292,11 +294,11 @@ String StripHelper::getAllProgramNames() {
             ret+= " ";
         ret+=String(i);
         ret+=" : ";
-        ret+=getProgramName((STRIP_PROGRAMS)i);
+        ret+=appendSpacesToGetMinLength(getProgramName((STRIP_PROGRAMS)i), 13);
+        ret+=getProgramDescription((STRIP_PROGRAMS)i);
     }
     return ret;
 }
-
 
 String StripHelper::getAllProgramNamesAsJsonArray() {
 
@@ -346,6 +348,21 @@ String StripHelper::ulToString(uint32_t number){
     char buf[16];
     ltoa(number,buf,10);
     return String(buf);
+}
+
+String StripHelper::appendSpacesToGetMinLength(String str, int minLength) {
+    int len = str.length();
+    if (len >= minLength)
+        return str;
+    
+    //We will need to add spaces
+    String spaces=" ";
+    int end = minLength - len;
+    for (int i = 1; i < end; i ++) {
+        spaces+=" ";
+    }
+    return str + spaces;
+
 }
 
 CRGB StripHelper::decodeColor(uint32_t uiColor) {
@@ -650,6 +667,27 @@ void StripHelper::programFire()
     FastLED.delay(stepDelay / FRAMES_PER_SECOND);
 }
 
+void StripHelper::runProgram(STRIP_PROGRAMS stripProgram) {
+    
+    switch(stripProgram) {
+        case OFF         : programOff(); break;
+        case SINGLE_COLOR: programSingleColor(); break;
+        case MULTI_COLOR : programMultiColor(); break;
+        case FIRE        : programFire(); break;
+        case DOWN        : programStepOne(getColorBank(0),getColorBank(1) ); stepUp(); break;
+        case UP_DOWN     : programUpDown(); break;
+        case RAINBOW     : programRainbow(); break;
+        case STARS       : programStars(); break;
+        case CYLON       : programCylon(); break;
+        case SECTIONS    : programSections();break;
+#ifdef SOLEY_IN    
+        case SOLEY       : programSoley(); break;
+#endif
+        default         : break; // do nothing
+
+    }
+}
+
 void StripHelper::run() {
     unsigned long time = millis();
 
@@ -663,25 +701,7 @@ void StripHelper::run() {
     
     
     lightLastTime = time;
-    switch(getProgram()) {
-        case OFF         : programOff(); break;
-        case SINGLE_COLOR: programSingleColor(); break;
-        case MULTI_COLOR : programMultiColor(); break;
-        case FIRE        : programFire(); break;
-        case DOWN        : programStepOne(getColorBank(0),getColorBank(1) ); stepUp(); break;
-        case UP_DOWN     : programUpDown(); break;
-        case RAINBOW     : programRainbow(); break;
-        case STARS       : programStars(); break;
-        case CYLON       : programCylon(); break;
-        case SECTIONS    : programSections();break;
-#ifdef SOLEY_IN    
-        case SOLEY       : programSoley(); break;
-#elif defined (ORRI_IN)  
-        case ORRI       : programOrri(); break;
-#endif
-        default         : break; // do nothing
-
-    }
+    runProgram(getProgram());
 }
 
 //steps one pixel at a time and changes the the pixels aftier
@@ -702,8 +722,8 @@ void StripHelper::initProgram(STRIP_PROGRAMS programToSet) {
         case STARS       : programStarsInit(); break;
 #ifdef SOLEY_IN        
         case SOLEY       : setDirection(true); break;
-#elif defined (ORRI_IN)      
-        case ORRI       : setDirection(true); break;
 #endif
+        case STRIP_PROGRAMS_COUNT:
+        default                  : break; // Do nothing for STRIP_PROGRAMS_COUNT 
     }
 }

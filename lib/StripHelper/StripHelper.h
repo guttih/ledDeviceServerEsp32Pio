@@ -58,8 +58,13 @@ void stripInit(){
 
 Example: ----
 */
+struct ProgramValueInfo {
+    String variableDescriptionArray;
+    int colors;
+};
+
 class StripHelper {
-    private:
+    protected:
         CRGBPalette16 mPal;
         int ledCount;
         void init();
@@ -98,12 +103,11 @@ class StripHelper {
         int getDirection();
         int setDirection(bool forward);
         void toggleDirection();
-        String quotes(String value);
-        String MakeJsonKeyVal(String key, String Value);
         String ulToString(uint32_t number);
+        String appendSpacesToGetMinLength(String str, int minLength);
         CRGB fadeTowardColor( CRGB& cur, const CRGB& target, uint8_t amount);
         void nblendU8TowardU8( uint8_t& cur, const uint8_t target, uint8_t amount);
-        
+                
         void programCylonFadeall();
         void programCylon();
         void programSoley();
@@ -119,19 +123,20 @@ class StripHelper {
         void programRainbow();
         void programFireInit();
         void programFire();
+
+    protected:
+        String quotes(String value);
+        String MakeJsonKeyVal(String key, String Value);
+
     public:
         
         StripHelper();
         void initialize(CFastLED *controller);
         CFastLED* getController();
-        void run();
         STRIP_PROGRAMS getProgram();
         int getCount();
         uint8_t getBrightness();
         void setBrightness(uint8_t brightness);
-        void initProgram(STRIP_PROGRAMS programToSet);
-        String getProgramName(STRIP_PROGRAMS stripProgram);
-        String getProgramDescription(STRIP_PROGRAMS stripProgram);
         String getAllProgramNames();
         String getAllProgramNamesAsJsonArray();
         String getProgramInfoAsJsonArray(STRIP_PROGRAMS stripProgram);
@@ -143,6 +148,12 @@ class StripHelper {
         bool setColorBank(uint8_t index, CRGB newColor);
         void setNewValues(STRIP_PROGRAMS program, unsigned long stepDelay, unsigned long value1, unsigned long value2, unsigned long value3, unsigned long value4);
         void programOff();
+        void run();
+        virtual void initProgram(STRIP_PROGRAMS programToSet);
+        virtual void runProgram(STRIP_PROGRAMS stripProgram);
+        virtual String getProgramName(STRIP_PROGRAMS stripProgram);
+        virtual String getProgramDescription(STRIP_PROGRAMS stripProgram);
+        virtual ProgramValueInfo getProgramValuesAsJsonArray(STRIP_PROGRAMS stripProgram);
 };
 
 
