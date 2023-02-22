@@ -63,8 +63,8 @@ by regular post to the address Haseyla 27, 260 Reykjanesbar, Iceland.
     StripSoley stripper; 
 #elif defined (ORRI_IN)
     #include "StripOrri.h"
-    const char* deviceId = "6b0c1be468124c49928be272"; /*Orri device*/
-    const char* hostName = "orSolX_sign"; /*max hostname 15 characters*/
+    const char* deviceId = "63f1253530dc6b0533d3659a"; /*Orri device*/
+    const char* hostName = "orri_sign"; /*max hostname 15 characters*/
     #define NUM_LEDS 300
     #define STRIP_TYPE APA102
     #define COLOR_SCHEME BGR 
