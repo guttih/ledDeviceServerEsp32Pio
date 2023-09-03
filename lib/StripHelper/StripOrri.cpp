@@ -58,12 +58,11 @@ void StripOrri::initProgram(STRIP_PROGRAMS programToSet) {
 void StripOrri::programOrri() {
         
         stepUp();
-		// fillByIndex(126, 128, getColorBank(0)); // 0 = underLine 
-        fillByIndex(  0,  14, getColorBank(0)); // 0 = underLine 
-        fillByIndex( 15,  44, getColorBank(1)); // 1 = letterO
-        fillByIndex( 45,  72, getColorBank(2)); // 2 = letterR  
-        fillByIndex( 73,  85, getColorBank(3)); // 3 = letterR  
-        fillByIndex( 86, 104, getColorBank(4)); // 4 = letterI  
+        fillByIndex( 0,    78, getColorBank(1)); // 1 = letterO     BLUE
+        fillByIndex( 79,  156, getColorBank(2)); // 2 = letterR     YELLOW
+        fillByIndex( 157, 234, getColorBank(3)); // 2 = letterR     RED
+        fillByIndex( 235, 268, getColorBank(4)); // 4 = letterI     GREEN 
+		fillByIndex(267,  299, getColorBank(0)); // 0 = underLine   RED
 		fastLED->show();
 }
 

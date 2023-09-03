@@ -153,6 +153,14 @@ class StripHelper {
         virtual String getProgramName(STRIP_PROGRAMS stripProgram);
         virtual String getProgramDescription(STRIP_PROGRAMS stripProgram);
         virtual ProgramValueInfo getProgramValuesAsJsonArray(STRIP_PROGRAMS stripProgram);
+
+        /**
+         * @brief Set the maximum power to be used, given in volts and milliamperes.
+         * 
+         * @param volts how many volts the leds are being driven at (usually 5)
+         * @param milliAmperes the maximum milliAmps of power draw you want
+         */
+        void setMaxPowerInVoltsAndMilliAmperes(uint8_t volts, uint32_t milliAmperes);
 };
 
 

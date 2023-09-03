@@ -9,3 +9,8 @@ in the development cycle.
 
 More information about PlatformIO Unit Testing:
 - https://docs.platformio.org/page/plus/unit-testing.html
+- Testing this application (ledDeviceServerEsp32Pio) is described in the test section
+  of the file [docs/development.adoc].
+
+
+[docs/development.adoc]:../docs/development.adoc#testing

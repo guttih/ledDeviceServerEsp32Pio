@@ -1,0 +1,70 @@
+= Development
+
+This document contains information to help with the development of this project.
+
+https://platformio.org/?utm_source=platformio&utm_medium=piohome[Platform IO] with the https://github.com/espressif/arduino-esp32[Arduino core for the ESP32] is used to 
+compile, build, test and send the application to the https://www.espressif.com/en/products/socs/esp32[Esp32] micro controller.
+
+[options="header"]
+|====
+^|Esp32 ^|Platform IO
+^a|
+image::https://github.com/guttih/voffcon/blob/master/docs/images/esp32DevModule.PNG?raw=true[https://github.com/guttih/voffcon/blob/master/docs/images/esp32DevModule.PNG, 160,120,link=https://www.espressif.com/en/products/socs/esp32]
+
+^a|
+image::https://cdn.platformio.org/images/platformio-logo.17fdc3bc.png[Platform IO, 160,120,link=https://marketplace.visualstudio.com/items?itemName=platformio.platformio-ide]
+|====
+
+
+
+== Testing
+
+I selected the https://docs.platformio.org/en/latest/advanced/unit-testing/frameworks/unity.html[Unity test framework] to use with https://docs.platformio.org/en/latest/advanced/unit-testing/index.html[PlatformIO] for testing specific parts of the code.
+
+.Important links
+* link:https://docs.platformio.org/page/plus/unit-testing.html[PlatformIO Unit Testing]
+* link:https://docs.platformio.org/en/latest/advanced/unit-testing/frameworks/unity.html[Unity test framework]
+
+
+=== Getting started with testing
+
+. Open the Arduino IDE application 
+. Find out which comport the micro-controller is connected to
+.. Hover over _Tools->Port_ and remember which _COM ports_ are connected
+.. Connect your Esp32 micro-controller to a usb port
+.. Hover over _Tools->Port_ and remember which _COM port_ was added +
+   *For demonstration purposes* set's say the port *COM6* was added.
+. Set the correct test port
+.. Open the file link:../platformio.ini[platformio.ini]
+.. Disable uploading via wifi and enable uploading via USB
+...  Make sure to add  `;` in front of the lines _upload_port = orri_sign_ and _upload_protocol = espota_ 
+... Make sure that the lines lines _upload_port = COM6_ and _test_port = COM6_
+   exist under the _[env:esp32dev]_ section.
+... That is something like this:
++
+[shell-caption]
+[source, shell]
+----
+[env:esp32dev]
+; upload_port = orri_sign
+; upload_protocol = espota
+upload_port = COM6
+test_port = COM6
+----
+
+==== Running the test
+
+Assuming the esp32 is connected to the usb on port COM6
+```
+pio test -e esp32dev
+```
+
+Showing serial print monitor
+```
+pio test -e esp32dev -v
+```
+
+
+
+
+

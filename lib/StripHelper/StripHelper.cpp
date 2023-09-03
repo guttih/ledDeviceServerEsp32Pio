@@ -41,7 +41,7 @@ void StripHelper::reset() {
     value3 = 0;
     value4 = 0;
     brightness = 5;
-    program = STRIP_PROGRAMS::MULTI_COLOR;
+    program = STRIP_PROGRAMS::ORRI;
     // stripColors[0] = CRGB::Magenta;
     // stripColors[1] = CRGB::Red;
     // stripColors[2] = CRGB::Green;
@@ -684,4 +684,10 @@ void StripHelper::initProgram(STRIP_PROGRAMS programToSet) {
         case STRIP_PROGRAMS_COUNT:
         default                  : break; // Do nothing for STRIP_PROGRAMS_COUNT 
     }
+}
+
+
+void StripHelper::setMaxPowerInVoltsAndMilliAmperes(uint8_t volts, uint32_t milliAmperes)
+{
+    fastLED->setMaxPowerInVoltsAndMilliamps(volts, milliAmperes);
 }

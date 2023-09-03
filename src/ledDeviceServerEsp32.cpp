@@ -68,8 +68,8 @@ by regular post to the address Haseyla 27, 260 Reykjanesbar, Iceland.
     #define NUM_LEDS 300
     #define STRIP_TYPE APA102
     #define COLOR_SCHEME BGR 
-    #define CLOCK_PIN 13  
-    #define DATA_PIN  14 
+    #define CLOCK_PIN 16  
+    #define DATA_PIN  17 
     StripOrri stripper; 
 #elif defined (KITCHEN_ISLAND)
     const char* deviceId = "5d879b9ba02e5105340114d2"; /*Kitchen Iceland device*/    
@@ -1346,6 +1346,7 @@ void stripInit(){
 #endif
     Serial.print(", Led count: ");Serial.println(NUM_LEDS);
     stripper.initialize(&FastLED);
+    stripper.setMaxPowerInVoltsAndMilliAmperes(5, 7000);
     Serial.println("\n - - - - - - -    Available strip commands    - - - - - - - -");
     Serial.println(stripper.getAllProgramNames());
     Serial.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
