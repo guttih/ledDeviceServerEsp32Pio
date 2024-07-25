@@ -11,5 +11,6 @@
         "unordered_set": "cpp",
         "vector": "cpp"
     },
-    "cmake.sourceDirectory": "C:/Users/gutti/source/repos/ledDeviceServerEsp32Pio/.pio/libdeps/esp32dev/Unity"
+    "cmake.sourceDirectory": "C:/Users/gutti/source/repos/ledDeviceServerEsp32Pio/.pio/libdeps/esp32dev/Unity",
+    "scm.diffDecorationsIgnoreTrimWhitespace": "true"
 }
